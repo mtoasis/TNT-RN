@@ -2,7 +2,6 @@ import axios from "axios"
 
 
 
-
 export const fetchData = (title) => (
     async (dispatch) => {
         const res = await axios.get("https://toolntool.herokuapp.com/api/posts/title/" + title);
@@ -12,6 +11,13 @@ export const fetchData = (title) => (
         })
     }
 )
+
+export const storeUser = (userinfo) => {
+dispatch({
+    type: "STORE_USER",
+    payload:userinfo
+})}
+
 
 export function fetchDataSelected (dataSelected){
     return (dispatch) => {

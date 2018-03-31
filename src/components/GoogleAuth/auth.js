@@ -1,21 +1,41 @@
 import { Constants, Google } from 'expo';
 import React, { Component } from 'react';
-import { Button, Alert, View } from "react-native";
+import { Button, Alert, View, Text, StyleSheet } from "react-native";
 import { connect } from "react-redux";
+import axios from 'axios'
+import {storeUser} from "../../actions/dataAction"
 
 
-export default class GoogleAuth extends Component {
+
+let mapStateToProps = (store) => {
+  return {
+      userInfo: store.data.userInfo
+  }
+}
+
+
+class GoogleAuth extends Component {
+
+  componentWillMount(){
+    console.log(this.props.dispatch)
+  }
 
   constructor() {
     super()
     this.state = {
-      user : null,
+      response : null,
     }
   }
 
-  checkUser = () => {
-    console.log(this.state.user)
+  logData = () => {
+    console.log(this.state.response)
   }
+
+  runStore = ()=>{
+    this.props.dispatch(storeUser(this.state.response))
+    console.log(this.props.userInfo)
+  }
+
 
   _handleGoogleLogin = async () => {
     try {
@@ -34,7 +54,23 @@ export default class GoogleAuth extends Component {
             `Hi ${user.name}!`,
           );
 
-          this.setState({ user: user })
+          const postData = {
+            name:{
+              familyName: user.familyName,
+              givenName: user.givenName
+            },
+            id:user.id,
+            email:user.email,
+            photoUrl: user.photoUrl
+          }
+
+          axios.post("http://169.234.98.51:3001/auth/mobile", postData)
+          .then(response=>{
+            console.log(response.data)
+            this.setState({response:response.data})
+            
+          })
+
           break;
         }
         case 'cancel': {
@@ -65,13 +101,47 @@ export default class GoogleAuth extends Component {
     return (
       <View>
         <Button
+          color="red"
+          style={styles.button}
           title="Login with Google"
           onPress={this._handleGoogleLogin}
-        />
+          />
 
-        <Button title="check user" onPress={this.checkUser.bind(this)} />
+        
+        <Button title="check data" onPress={this.logData.bind(this)} />
+
+        <Button color="green" title="store" onPress={this.runStore.bind(this)} />
+
+
+
       </View>
     )
   }
 
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'white'
+  },
+  button: {
+      width: 250,
+      height: 50,
+      backgroundColor: "black",
+      borderRadius: 30,
+      justifyContent: 'center',
+  },
+  text: {
+      color: 'white',
+      fontSize: 30,
+      textAlign: 'center'
+  }
+
+});
+
+export default connect(mapStateToProps)(GoogleAuth)

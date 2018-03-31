@@ -5,7 +5,6 @@ export default function reducer(state = {
     fetched: false,
     data: [],
     userInfo:{},
-    dataSelected: {},
     error: null,
 }, action) {
     switch (action.type) {

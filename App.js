@@ -12,7 +12,7 @@ export default class App extends Component {
     return (
       <Provider store={store}>
 
-      <StartPage />
+      <StartPage /> 
 
       {/* <Tabs /> */}
       </Provider>
