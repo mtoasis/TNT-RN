@@ -17,6 +17,8 @@ firebase.initializeApp(firebaseConfig);
 
 export default class PostPage extends React.Component {
 
+  //grab user info from redux
+
   static navigationOptions = {
     title: "Post Tool"
   }
@@ -90,7 +92,7 @@ export default class PostPage extends React.Component {
 
     this.setState({ coordinate: response[0] })
 
-    // console.log(this.state.coordinate)
+    console.log(this.state.coordinate)
 
   };
 
@@ -99,7 +101,8 @@ export default class PostPage extends React.Component {
       title: this.state.title,
       img: this.state.imgURL,
       location: this.state.location,
-      coordinate: this.state.coordinate
+      coordinate: this.state.coordinate,
+      //user : this.props.user
     }
     console.log("posting with..\n")
     console.log(postingData)
