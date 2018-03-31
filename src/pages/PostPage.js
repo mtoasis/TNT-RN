@@ -2,10 +2,14 @@ import React from 'react';
 import { StyleSheet, Text, View, Button, ScrollView, Image } from 'react-native';
 import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
 import { Constants, Location, Permissions, ImagePicker } from 'expo';
-
+import axios from 'axios'
+import hm from '../components/hm.png'
 
 export default class PostPage extends React.Component {
 
+  componentWillMount(){
+    this.uploadImg()
+  }
 
   static navigationOptions = {
     title: "Post Tool"
@@ -20,6 +24,7 @@ export default class PostPage extends React.Component {
       image: null,
       location: null,
       coordinate: null,
+      base64: null,
     };
   }
 
@@ -27,14 +32,16 @@ export default class PostPage extends React.Component {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3],
+      base64: true,
     });
 
-    // console.log(result);
 
     if (!result.cancelled) {
       this.setState({ image: result.uri });
     }
     console.log(this.state.image)
+    // console.log(result.base64)
+    // this.setState({ base64: result.bae64 })
   };
 
 
@@ -46,12 +53,36 @@ export default class PostPage extends React.Component {
       });
     }
     let location = await Location.getCurrentPositionAsync({});
-    let response = await Expo.Location.reverseGeocodeAsync({ latitude: Number(location.coords.latitude), longitude: Number(location.coords.longitude) })
+
+    let response = await Expo.Location.reverseGeocodeAsync({
+      latitude: Number(location.coords.latitude),
+      longitude: Number(location.coords.longitude)
+    })
+
     this.setState({ location: `${response[0].city}, ${response[0].region}` });
+
     this.setState({ coordinate: response[0] })
+
     console.log(this.state.coordinate)
 
   };
+
+  uploadImg = ()=>{
+    console.log("running axios....")
+    axios.post("https://api.cloudinary.com/v1_1/daretodate/image/upload", {
+      file: hm,
+      tags: "hammer",
+      upload_preset: 'v4gae7vn',
+      api_key: '436813525233915',
+  }, {
+      headers: { "X-Requested-With": "XMLHttpRequest" }})
+      .then(response => {
+        console.log(response)
+        const data = response.data;
+        const fileURL = data.secure_url
+        console.log(data);
+    });
+  }
 
 
 
@@ -82,12 +113,14 @@ export default class PostPage extends React.Component {
             onPress={this._pickImage}
           />
         }
-        {image &&
-          <Button
-            title="Change Image"
-            onPress={this._pickImage}
-          />
-        }
+
+            <Button
+              title="push"
+              onPress={this.uploadImg.bind(this)}
+            />
+            <Image source={hm} style={{width:400,height:400}} />
+
+
 
       </ScrollView>
     )
