@@ -3,13 +3,19 @@ import { StyleSheet, Text, View, Button, ScrollView, Image } from 'react-native'
 import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
 import { Constants, Location, Permissions, ImagePicker } from 'expo';
 import axios from 'axios'
-import hm from '../components/hm.png'
+import * as firebase from 'firebase';
+import {postData} from '../actions/dataAction'
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDaEVs6ejMUL6WRNuahA4Je0MuyZggTc_Q",
+  authDomain: "toolntool-8882f.firebaseapp.com",
+  databaseURL: "https://toolntool-8882f.firebaseio.com",
+  storageBucket: "toolntool-8882f.appspot.com",
+};
+
+firebase.initializeApp(firebaseConfig);
 
 export default class PostPage extends React.Component {
-
-  componentWillMount(){
-    this.uploadImg()
-  }
 
   static navigationOptions = {
     title: "Post Tool"
@@ -24,26 +30,47 @@ export default class PostPage extends React.Component {
       image: null,
       location: null,
       coordinate: null,
-      base64: null,
+      imgURL: null,
     };
   }
+
 
   _pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       allowsEditing: true,
       aspect: [4, 3],
-      base64: true,
+      base64: true
     });
 
-
     if (!result.cancelled) {
-      this.setState({ image: result.uri });
-    }
-    console.log(this.state.image)
-    // console.log(result.base64)
-    // this.setState({ base64: result.bae64 })
-  };
+      this.setState({
+        image: result.uri,        
+      })
 
+      let base64Img = `data:image/jpg;base64,${result.base64}`
+
+      //Add your cloud name
+      let apiUrl = 'https://api.cloudinary.com/v1_1/daretodate/image/upload';
+  
+      let data = {
+        "file": base64Img,
+        "upload_preset": "v4gae7vn",
+      }
+      fetch(apiUrl, {
+        body: JSON.stringify(data),
+        headers: {
+          'content-type': 'application/json'
+        },
+        method: 'POST',
+      }).then(r => {
+        let data = r._bodyText
+        this.setState({ imgURL: JSON.parse(data).secure_url })
+        // console.log(JSON.parse(data).secure_url)
+        // console.log(this.state.imageURL)
+      }).catch(err => console.log(err))
+  
+    }
+  }
 
   _getLocationAsync = async () => {
     let { status } = await Permissions.askAsync(Permissions.LOCATION);
@@ -63,27 +90,25 @@ export default class PostPage extends React.Component {
 
     this.setState({ coordinate: response[0] })
 
-    console.log(this.state.coordinate)
+    // console.log(this.state.coordinate)
 
   };
 
-  uploadImg = ()=>{
-    console.log("running axios....")
-    axios.post("https://api.cloudinary.com/v1_1/daretodate/image/upload", {
-      file: hm,
-      tags: "hammer",
-      upload_preset: 'v4gae7vn',
-      api_key: '436813525233915',
-  }, {
-      headers: { "X-Requested-With": "XMLHttpRequest" }})
-      .then(response => {
-        console.log(response)
-        const data = response.data;
-        const fileURL = data.secure_url
-        console.log(data);
-    });
-  }
+  logging = () =>{
+    const postingData = {
+      title: this.state.title,
+      img: this.state.imgURL,
+      location: this.state.location,
+      coordinate: this.state.coordinate
+    }
+    console.log("posting with..\n")
+    console.log(postingData)
 
+    axios.post("https://toolntool.herokuapp.com/api/posts",postingData)
+    .then(response=>{
+        console.log(response)
+    })
+  }
 
 
   render() {
@@ -110,18 +135,16 @@ export default class PostPage extends React.Component {
         {!image &&
           <Button
             title="Insert Image"
-            onPress={this._pickImage}
+            onPress={this._pickImage.bind(this)}
           />
         }
 
-            <Button
-              title="push"
-              onPress={this.uploadImg.bind(this)}
-            />
-            <Image source={hm} style={{width:400,height:400}} />
-
-
-
+        {image &&
+          <Button
+            title="push"
+            onPress={this.logging.bind(this)}
+          />
+        }
       </ScrollView>
     )
   }

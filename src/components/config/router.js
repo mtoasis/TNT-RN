@@ -22,8 +22,8 @@ const PostStack = StackNavigator({
 
 export default Tabs = TabNavigator(
     {   
-        DashBoard: { screen: DashBoard },  
         PostTool: { screen: PostStack },
+        DashBoard: { screen: DashBoard },          
         FindTool: { screen: FindStack },              
         Inbox: { screen: InboxPage },
     },

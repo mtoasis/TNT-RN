@@ -1,5 +1,8 @@
 import axios from "axios"
 
+
+
+
 export const fetchData = (title) => (
     async (dispatch) => {
         const res = await axios.get("https://toolntool.herokuapp.com/api/posts/title/" + title);
@@ -29,4 +32,13 @@ export const fetchAll = () => (
         })
     }
 )
+
+export function postData(postData){
+    axios.post("https://toolntool.herokuapp.com/api/posts",postData)
+    .then(response=>{
+        console.log(response)
+    })
+}
+
+
 

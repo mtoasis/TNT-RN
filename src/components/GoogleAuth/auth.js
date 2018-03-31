@@ -1,8 +1,16 @@
 import { Constants, Google } from 'expo';
 import React, { Component } from 'react';
 import { Button, Alert } from "react-native";
+import { connect } from "react-redux";
 
-export default class GoogleAuth extends Component {
+
+let mapStateToProps = (store) => {
+  return {
+      userInfo: store.data.userInfo
+  }
+}
+
+class GoogleAuth extends Component {
     _handleGoogleLogin = async () => {
       try {
         const { type, user } = await Google.logInAsync({
@@ -19,6 +27,11 @@ export default class GoogleAuth extends Component {
               'Logged in!',
               `Hi ${user.name}!`,
             );
+            dispatch({
+              type: "STORE_USER",
+              payload: dataSelected
+          })
+          console.log(this.props.userInfo)
             break;
           }
           case 'cancel': {
@@ -32,6 +45,7 @@ export default class GoogleAuth extends Component {
             Alert.alert(
               'Oops!',
               'Login failed!',
+              'default',
             );
           }
         }
@@ -39,6 +53,7 @@ export default class GoogleAuth extends Component {
         Alert.alert(
           'Oops!',
           'Login failed!',
+          'error',
         );
       }
     };
@@ -54,3 +69,5 @@ export default class GoogleAuth extends Component {
     }
 
 }
+
+export default connect(mapStateToProps)(GoogleAuth);

@@ -1,7 +1,10 @@
+
+
 export default function reducer(state = {
     fetching: false,
     fetched: false,
     data: [],
+    userInfo:{},
     dataSelected: {},
     error: null,
 }, action) {
@@ -18,6 +21,13 @@ export default function reducer(state = {
             return {
                 ...state,
                 data: action.payload
+            }
+        }
+        
+        case "STORE_USER":{
+            return{
+                ...state,
+                userInfo: action.payload
             }
         }
 
