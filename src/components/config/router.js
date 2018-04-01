@@ -6,8 +6,8 @@ import FindPage from '../../pages/FindPage'
 import InboxPage from '../../pages/InboxPage'
 import PostPage from '../../pages/PostPage'
 import DetailPage from '../../pages/DetailPage'
-
 import { Ionicons } from '@expo/vector-icons'; // Version can be specified in package.json
+
 
 const FindStack = StackNavigator({
     FindTool: { screen: FindPage },
@@ -20,10 +20,11 @@ const PostStack = StackNavigator({
 }
 )
 
+
 export default Tabs = TabNavigator(
     {   
-        PostTool: { screen: PostStack },
-        DashBoard: { screen: DashBoard },          
+        DashBoard: { screen: DashBoard }, 
+        PostTool: { screen: PostStack },         
         FindTool: { screen: FindStack },              
         Inbox: { screen: InboxPage },
     },
@@ -47,6 +48,7 @@ export default Tabs = TabNavigator(
 
                 return <Ionicons name={iconName} size={25} color={tintColor} />;
             },
+
         }),
         tabBarComponent: TabBarBottom,
         tabBarPosition: 'bottom',
@@ -55,8 +57,8 @@ export default Tabs = TabNavigator(
             inactiveTintColor: 'gray',
         },
         animationEnabled: false,
-        swipeEnabled: false,
+        swipeEnabled: true,
+        
     }
 );
-
 

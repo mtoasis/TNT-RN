@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { Text, View, StyleSheet, TextInput, Image, ScrollView, Button } from "react-native";
 import { Card, ListItem } from 'react-native-elements'
-import { fetchAll,fetchDataSelected } from '../../actions/dataAction'
+import { fetchAll, fetchDataSelected } from '../../actions/dataAction'
 import { StackNavigator } from 'react-navigation';
 
 
@@ -14,7 +14,7 @@ let mapStateToProps = (store) => {
 }
 
 class Result extends Component {
-    
+
     constructor(props) {
         super(props)
         this.state = {
@@ -28,6 +28,16 @@ class Result extends Component {
 
     render() {
         const { data } = this.props;
+
+        if (this.props.data.length === 0) {
+            return (
+                <View style={styles.container}>
+                    <Text>
+                        Loading
+                    </Text>
+                </View>
+            )
+        }
 
         return (
             <ScrollView>
@@ -70,9 +80,9 @@ class Result extends Component {
                             <Button
                                 color='black'
                                 title='See Detail'
-                                onPress={() => this.props.navigation.navigate('Detail', post)                               
-                                                                    
-                            }
+                                onPress={() => this.props.navigation.navigate('Detail', post)
+
+                                }
                             />
                         </Card>
 
@@ -83,8 +93,15 @@ class Result extends Component {
         )
     }
 }
-
-
-
-
 export default connect(mapStateToProps)(Result);
+
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white'
+    }
+});
