@@ -29,7 +29,7 @@ class DashBoard extends React.Component {
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
             this.setState({
-                locationResult: 'Permission to access location was denied',
+                locationResult: 'Permissihjnon to access location was denied',
             });
         }
         let location = await Expo.Location.getCurrentPositionAsync({});
@@ -42,8 +42,10 @@ class DashBoard extends React.Component {
         let geoInfo = {
             city: response[0].city,
             region: response[0].region,
-            longitude: location.coords.longitude,
-            latitude: location.coords.latitude
+            coordinate: {
+                longitude: location.coords.longitude,
+                latitude: location.coords.latitude
+            }
         }
 
         store.dispatch({
@@ -60,8 +62,27 @@ class DashBoard extends React.Component {
         console.log(this.props.userInfo)
         console.log("redux geo state")
         console.log(this.props.geoInfo)
-        console.log("local state")
-        console.log(this.state)
+
+    }
+
+    getUserPosts(){
+        axios.post("http://toolntool.herokuapp.com/api/mobile/userposts", {
+            id:this.props.userInfo._id
+        })
+            .then(response => {
+                console.log("user post from server \n")
+                console.log(response.data)
+            })
+    }
+
+    getConversation = () => {
+        console.log("requesting conversation... \n\n")
+        axios.post("http://toolntool.herokuapp.com/api/mobile/conversations", {
+            _id:this.props.userInfo._id
+        })
+            .then(response => {
+                console.log(response.data)
+            })
     }
 
     render() {
@@ -74,13 +95,13 @@ class DashBoard extends React.Component {
                 </View>
             )
         }
-        else if (this.props.isGeoStored && !this.props.isSignedIn){
+        else if (this.props.isGeoStored && !this.props.isSignedIn) {
             return (
                 <View style={styles.container}>
-    
-                    <GoogleAuth />   
 
-    
+                    <GoogleAuth />
+
+
                 </View>
             )
         }
@@ -90,8 +111,16 @@ class DashBoard extends React.Component {
                 <Text>Welcome! {this.props.userInfo.name.givenName}</Text>
 
                 <Button color="black"
-                        title="check log"
-                        onPress={this.logData.bind(this)} />
+                    title="check log"
+                    onPress={this.logData.bind(this)} />
+
+                <Button color="black"
+                    title="check conversation"
+                    onPress={this.getConversation.bind(this)} />
+
+                <Button color="blue"
+                    title="check userpost"
+                    onPress={this.getUserPosts.bind(this)} />
 
             </View>
         )

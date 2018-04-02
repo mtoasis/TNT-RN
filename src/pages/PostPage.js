@@ -64,8 +64,7 @@ class PostPage extends React.Component {
         this.setState({ imgURL: JSON.parse(data).secure_url })
       }).catch(err => console.log(err))
 
-    }
-  }
+    }  }
 
 
   // logging = () => {
@@ -88,14 +87,20 @@ class PostPage extends React.Component {
         img: this.state.imgURL,
         location: `${this.props.geoInfo.city}, ${this.props.geoInfo.region}`,
         coordinate: this.props.geoInfo.coordinate,
-        user: this.props.userInfo._id
+        user: this.props.userInfo._id,
+        description: this.state.description,
       }
       console.log("posting with..\n")
       console.log(postingData)
 
-      axios.post("https://toolntool.herokuapp.com/api/posts", postingData)
+      // axios.post("https://toolntool.herokuapp.com/api/posts", postingData)
+      //   .then(response => {
+      //     console.log(response)
+      //   })
+
+      axios.post("http://toolntool.herokuapp.com/api/posts/mobile", postingData)
         .then(response => {
-          console.log(response)
+          console.log(response.data)
         })
     }
 

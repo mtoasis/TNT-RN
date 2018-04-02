@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button, Image} from 'react-native';
 import { Card, ListItem } from 'react-native-elements'
+import axios from 'axios'
 
 export default class DetailPage extends React.Component {
 
@@ -11,10 +12,20 @@ export default class DetailPage extends React.Component {
         }
       };
 
+      startConv(){
+        axios.post("http://toolntool.herokuapp.com/api/mobile/startconversation", {
+            postUserId:this.props.navigation.state.params.postInfo.user._id,
+            userId: this.props.navigation.state.params.userInfo._id,
+        }).then(response=>{
+            console.log(response.data)
+        })
+      }
+
 
     render() {
 
-        const post = this.props.navigation.state.params
+        const post = this.props.navigation.state.params.postInfo
+        // console.log(post)
 
 
         return (
@@ -49,6 +60,8 @@ export default class DetailPage extends React.Component {
                             <Text style={{ marginBottom: 10 }}>
                                 {post.location}
                             </Text>
+
+                            <Button title="Rent" onPress={this.startConv.bind(this)} />
                         </View>
                     </View>
                 </Card>

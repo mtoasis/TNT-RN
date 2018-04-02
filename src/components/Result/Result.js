@@ -10,6 +10,7 @@ import { StackNavigator } from 'react-navigation';
 let mapStateToProps = (store) => {
     return {
         data: store.data.data,
+        userInfo: store.data.userInfo
     }
 }
 
@@ -80,7 +81,10 @@ class Result extends Component {
                             <Button
                                 color='black'
                                 title='See Detail'
-                                onPress={() => this.props.navigation.navigate('Detail', post)
+                                onPress={() => this.props.navigation.navigate('Detail', {
+                                    postInfo:post,
+                                    userInfo:this.props.userInfo
+                                })
 
                                 }
                             />
