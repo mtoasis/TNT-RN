@@ -11,7 +11,6 @@ export const fetchData = (title) => (
     }
 )
 
-
 export const fetchAll = () => (
     async (dispatch) => {
         const res = await axios.get("https://toolntool.herokuapp.com/api/posts");
@@ -29,6 +28,7 @@ export function postData(postData) {
             console.log(response)
         })
 }
+
 
 
 

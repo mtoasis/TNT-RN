@@ -6,6 +6,7 @@ import FindPage from '../../pages/FindPage'
 import InboxPage from '../../pages/InboxPage'
 import PostPage from '../../pages/PostPage'
 import DetailPage from '../../pages/DetailPage'
+import MessagePage from '../../pages/MessagePage'
 import { Ionicons } from '@expo/vector-icons'; // Version can be specified in package.json
 
 
@@ -20,13 +21,19 @@ const PostStack = StackNavigator({
 }
 )
 
+const InboxStack = StackNavigator({
+    Inbox: { screen: InboxPage },
+    Message: { screen: MessagePage}       
+}
+)
+
 
 export default Tabs = TabNavigator(
-    {   
+    {           
         DashBoard: { screen: DashBoard }, 
         PostTool: { screen: PostStack },         
-        FindTool: { screen: FindStack },              
-        Inbox: { screen: InboxPage },
+        FindTool: { screen: FindStack },             
+        Inbox: { screen: InboxStack },
     },
     {
         navigationOptions: ({ navigation }) => ({

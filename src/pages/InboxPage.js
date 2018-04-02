@@ -4,6 +4,8 @@ import axios from 'axios'
 import { connect } from "react-redux";
 import store from '../../store'
 import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
+import ConversationList from '../components/ConversationList/ConversationList'
+
 
 let mapStateToProps = (store) => {
     return {
@@ -18,40 +20,33 @@ let mapStateToProps = (store) => {
 
 class InboxPage extends React.Component {
 
-    constructor(){
+
+    static navigationOptions = {
+        title: "Inbox",
+    };
+
+    constructor() {
         super()
-        this.state={
+        this.state = {
             message: null,
         }
     }
 
-    componentDidMount() {
-        this.getConversation()
-    }
-
-
-    getConversation = () => {
+    getConversation = async () => {
         console.log("requesting conversation... \n\n")
-        axios.post("http://toolntool.herokuapp.com/api/mobile/conversations", {
+        let res = await axios.post("http://toolntool.herokuapp.com/api/mobile/conversations", {
             _id: this.props.userInfo._id
         })
             .then(response => {
-                // console.log(response.data)
                 store.dispatch({
                     type: "STORE_CONVERSATION",
                     payload: response.data
                 })
-
             })
+        console.log("conversation loaded")
     }
 
-    getMessage = () => {
-        axios.post("http://toolntool.herokuapp.com/api/mobile/messages", {
-            cid: this.props.conversation[0]._id
-        }).then(response => {
-            console.log(response.data)
-        })
-    }
+
 
     logging() {
         console.log(this.props.conversation)
@@ -67,50 +62,33 @@ class InboxPage extends React.Component {
         }
     }
 
-    sendMessage(){
-        axios.post("http://toolntool.herokuapp.com/api/mobile/sendmessage", {
-            cid: this.props.conversation[0]._id,
-            uid: this.props.userInfo._id,
-            content: this.state.message
-        }).then(response => {
-            console.log("message response from server \n")
-            console.log(response.data)
-        })
-    }
-
     render() {
-        if (this.props.isConversationStored) {
+
+        if (!this.props.isSignedIn) {
             return (
                 <View style={styles.container}>
-                    {/* <Text>{JSON.stringify(this.props.conversation)}</Text> */}
-                    <Button title="message" onPress={this.getMessage.bind(this)} />
-
-                    <Button title="logging" onPress={this.logging.bind(this)} />
-
-                    <Button title="Checking User" onPress={this.checkUser.bind(this)} />
-
-                    <FormLabel>message</FormLabel>
-                    <FormInput onChangeText={(message) => { this.setState({ message }) }} />
-
-                    <Button title="send Message" onPress={this.sendMessage.bind(this)} />
+                    <Text>Please sign in to access inbox</Text>
 
 
                 </View>
             )
         }
-
+        else if (this.props.isSignedIn && !this.props.isConversationStored) {
+            return (
+                <View style={styles.container}>
+                    <Button title="load message"
+                        style={styles.button}
+                        onPress={this.getConversation.bind(this)} />
+                </View>
+            )
+        }
         return (
-            <View style={styles.container}>
-                <Text>Loading</Text>
-            </View>
+            <ConversationList navigation={this.props.navigation} />
         )
-
-
     }
 }
 
 export default connect(mapStateToProps)(InboxPage)
-
 
 const styles = StyleSheet.create({
     container: {
@@ -128,9 +106,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     text: {
-        color: 'white',
+        color: 'black',
         fontSize: 30,
         textAlign: 'center'
-    }
-
+    },
 });
+

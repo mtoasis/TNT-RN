@@ -42,9 +42,10 @@ _handleGoogleLogin = async () => {
           email: user.email,
           photoUrl: user.photoUrl
         }
+
         axios.post("http://toolntool.herokuapp.com/auth/mobile", info)
-          .then(response => {
-            store.dispatch({
+          .then(response =>{
+            let res = store.dispatch({
               type: "STORE_USER",
               payload: response.data
             })

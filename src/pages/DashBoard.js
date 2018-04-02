@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, Button, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { Location, Permissions } from 'expo';
 import { connect } from "react-redux";
 import axios from 'axios'
 import GoogleAuth from '../components/GoogleAuth/auth'
 import store from '../../store'
+import { FormLabel, FormInput, List, ListItem, Button } from 'react-native-elements'
+import { Ionicons } from '@expo/vector-icons';
 
 let mapStateToProps = (store) => {
     return {
@@ -47,12 +49,10 @@ class DashBoard extends React.Component {
                 latitude: location.coords.latitude
             }
         }
-
         store.dispatch({
             type: "STORE_GEO",
             payload: geoInfo
         })
-        // this.setState({ isGeoStored: true })
         console.log("geo done")
     };
 
@@ -65,22 +65,12 @@ class DashBoard extends React.Component {
 
     }
 
-    getUserPosts(){
+    getUserPosts() {
         axios.post("http://toolntool.herokuapp.com/api/mobile/userposts", {
-            id:this.props.userInfo._id
+            id: this.props.userInfo._id
         })
             .then(response => {
                 console.log("user post from server \n")
-                console.log(response.data)
-            })
-    }
-
-    getConversation = () => {
-        console.log("requesting conversation... \n\n")
-        axios.post("http://toolntool.herokuapp.com/api/mobile/conversations", {
-            _id:this.props.userInfo._id
-        })
-            .then(response => {
                 console.log(response.data)
             })
     }
@@ -98,11 +88,8 @@ class DashBoard extends React.Component {
         else if (this.props.isGeoStored && !this.props.isSignedIn) {
             return (
                 <View style={styles.container}>
-
                     <GoogleAuth />
-
-
-                </View>
+                </View >
             )
         }
         return (
@@ -113,10 +100,6 @@ class DashBoard extends React.Component {
                 <Button color="black"
                     title="check log"
                     onPress={this.logData.bind(this)} />
-
-                <Button color="black"
-                    title="check conversation"
-                    onPress={this.getConversation.bind(this)} />
 
                 <Button color="blue"
                     title="check userpost"
@@ -147,8 +130,7 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 30,
         textAlign: 'center'
-    }
-
+    },
 });
 
 

@@ -8,7 +8,7 @@ export default class DetailPage extends React.Component {
     static navigationOptions = ({ navigation }) =>{
         const {params} = navigation.state;
         return{
-            title: params ? params.title : 'A Nested Details Screen',
+            title: params ? params.postinfo.title : 'A Nested Details Screen',
         }
       };
 

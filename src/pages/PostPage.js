@@ -93,11 +93,6 @@ class PostPage extends React.Component {
       console.log("posting with..\n")
       console.log(postingData)
 
-      // axios.post("https://toolntool.herokuapp.com/api/posts", postingData)
-      //   .then(response => {
-      //     console.log(response)
-      //   })
-
       axios.post("http://toolntool.herokuapp.com/api/posts/mobile", postingData)
         .then(response => {
           console.log(response.data)
