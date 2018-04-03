@@ -34,7 +34,7 @@ class Result extends Component {
             return (
                 <View style={styles.container}>
                     <Text>
-                        Loading
+                        No Result to show
                     </Text>
                 </View>
             )
