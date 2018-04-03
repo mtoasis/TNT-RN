@@ -37,6 +37,7 @@ export default class GoogleAuth extends Component {
           type: "STORE_CONVERSATION",
           payload: response.data
         })
+        console.log(response.data)
         this.getUserPosts()
         console.log("conversation loaded")
       })

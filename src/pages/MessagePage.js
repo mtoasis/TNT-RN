@@ -5,6 +5,14 @@ import axios from 'axios'
 import { Ionicons } from '@expo/vector-icons';
 
 export default class MessagePage extends React.Component {
+    static navigationOptions = ({ navigation }) => {
+        const { params } = navigation.state;
+        return {
+            title: params.conversation.users[0]._id === params.userInfo._id ?
+                `${params.conversation.users[1].name.givenName} ${params.conversation.users[1].name.familyName}`
+                : `${params.conversation.users[0].name.givenName} ${params.conversation.users[0].name.familyName}`
+        }
+    };
 
     constructor() {
         super()
@@ -26,14 +34,6 @@ export default class MessagePage extends React.Component {
         clearInterval(this.timerID);
     }
 
-    static navigationOptions = ({ navigation }) => {
-        const { params } = navigation.state;
-        return {
-            title: params.conversation.users[0]._id === params.userInfo._id ?
-                `${params.conversation.users[1].name.givenName} ${params.conversation.users[1].name.familyName}`
-                : `${params.conversation.users[0].name.givenName} ${params.conversation.users[0].name.familyName}`
-        }
-    };
 
     getMessage = () => {
         console.log("refreshing")
@@ -123,17 +123,17 @@ export default class MessagePage extends React.Component {
                             width: 250,
                             height: 50,
                             backgroundColor: "white",
-                            marginLeft:10
+                            marginLeft: 10
                         }}
                         inputStyle={{ fontSize: 20 }}
                         onChangeText={(newMessage) => { this.setState({ newMessage }) }}
-                        ref={input => this.input = input} 
+                        ref={input => this.input = input}
                         placeholder="Type message"
-                        />
+                    />
 
-                    <Button buttonStyle={{ width: 80, height: 50, borderWidth:1, borderColor:"grey", marginRight:10}}
+                    <Button buttonStyle={{ width: 80, height: 50, borderWidth: 1, borderColor: "grey", marginRight: 10 }}
                         backgroundColor="#D2D2D2"
-                        icon={{ name: 'send', size:30, }}
+                        icon={{ name: 'send', size: 30, }}
                         onPress={this.sendMessage.bind(this)} />
                 </View>
             </View>

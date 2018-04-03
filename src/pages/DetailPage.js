@@ -1,25 +1,29 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image} from 'react-native';
+import { StyleSheet, Text, View, Button, Image } from 'react-native';
 import { Card, ListItem } from 'react-native-elements'
 import axios from 'axios'
 
 export default class DetailPage extends React.Component {
 
-    static navigationOptions = ({ navigation }) =>{
-        const {params} = navigation.state;
-        return{
+    static navigationOptions = ({ navigation }) => {
+        const { params } = navigation.state;
+        return {
             title: params ? params.postInfo.title : 'A Nested Details Screen',
         }
-      };
+    };
 
-      startConv(){
+    startConv() {
         axios.post("http://toolntool.herokuapp.com/api/mobile/startconversation", {
-            postUserId:this.props.navigation.state.params.postInfo.user._id,
+            postUserId: this.props.navigation.state.params.postInfo.user._id,
             userId: this.props.navigation.state.params.userInfo._id,
-        }).then(response=>{
+        }).then(response => {
             console.log(response.data)
+            this.props.navigation.navigate('Message', {
+                conversation: response.data,
+                userInfo: this.props.navigation.state.params.userInfo
+            })
         })
-      }
+    }
 
 
     render() {
@@ -30,7 +34,7 @@ export default class DetailPage extends React.Component {
 
         return (
             <View style={styles.container}>
-                
+
                 <Card
                     title={post.title}
                 >

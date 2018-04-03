@@ -16,7 +16,7 @@ export default class Testing extends React.Component {
             <View style={styles.container}>
 
                 <Text style={{ alignSelf: 'flex-start', marginLeft: "8%", color: "tomato" }}>Inbox</Text>
-                <ScrollView style={{flex:1}} contentContainerStyle={styles.boxContainer}>
+                <View style={{flex:1}} style={styles.boxContainer}>
                 
                     <TouchableOpacity style={styles.smallContainer}>
                         <Text style={styles.text}>
@@ -44,7 +44,7 @@ export default class Testing extends React.Component {
                         </Text>
                     </TouchableOpacity>
 
-                </ScrollView>
+                </View>
             </View>
 
         )
@@ -55,9 +55,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'white'
+
+        // justifyContent: 'center',
+        // alignItems: 'center',
+        // backgroundColor: 'white'
     },
     text: {
         fontSize: 20,
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         // paddingVertical: 20,
         padding:20,
+        overflow:'scroll'
     },
     smallContainer: {
         width: "90%",
