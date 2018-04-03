@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, TouchableOpacity } from 'react-native';
 import axios from 'axios'
 import { connect } from "react-redux";
 import store from '../../store'
@@ -68,22 +68,19 @@ class InboxPage extends React.Component {
             return (
                 <View style={styles.container}>
                     <Text>Please sign in to access inbox</Text>
-
-
-                </View>
-            )
-        }
-        else if (this.props.isSignedIn && !this.props.isConversationStored) {
-            return (
-                <View style={styles.container}>
-                    <Button title="load message"
-                        style={styles.button}
-                        onPress={this.getConversation.bind(this)} />
                 </View>
             )
         }
         return (
-            <ConversationList navigation={this.props.navigation} />
+            <View style={styles.container}>
+                <ConversationList navigation={this.props.navigation} />
+                <TouchableOpacity onPress={this.getConversation.bind(this)}>
+
+                    <Text>
+                        Refresh Inbox
+                </Text>
+                </TouchableOpacity>
+            </View>
         )
     }
 }

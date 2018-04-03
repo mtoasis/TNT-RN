@@ -1,10 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, Alert, TouchableHighlight, TouchableOpacity } from 'react-native';
 import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements'
 import { Constants, ImagePicker, Ionicons } from 'expo';
 import { postData } from '../actions/dataAction'
 import { connect } from "react-redux";
 import axios from 'axios'
+import noImage from '../resource/Img/noImage.png'
 
 let mapStateToProps = (store) => {
   return {
@@ -17,7 +18,6 @@ let mapStateToProps = (store) => {
 
 class PostPage extends React.Component {
 
-
   static navigationOptions = {
     title: "Post Tool",
   }
@@ -26,10 +26,10 @@ class PostPage extends React.Component {
     super()
     this.state = {
       title: "",
-      user: "",
       description: "",
       image: null,
       imgURL: null,
+      base64: null,
     };
   }
 
@@ -43,9 +43,16 @@ class PostPage extends React.Component {
     if (!result.cancelled) {
       this.setState({
         image: result.uri,
+        base64: result.base64,
       })
+    }
+  }
 
-      let base64Img = `data:image/jpg;base64,${result.base64}`
+  sendPost() {
+    if (this.state.image && this.state.title !== "" && this.state.description !== "") {
+      console.log("sending post")
+
+      let base64Img = `data:image/jpg;base64,${this.state.base64}`
 
       let apiUrl = 'https://api.cloudinary.com/v1_1/daretodate/image/upload';
 
@@ -62,47 +69,34 @@ class PostPage extends React.Component {
       }).then(r => {
         let data = r._bodyText
         this.setState({ imgURL: JSON.parse(data).secure_url })
-      }).catch(err => console.log(err))
 
-    }  }
+        const postingData = {
+          title: this.state.title,
+          img: this.state.imgURL,
+          location: `${this.props.geoInfo.city}, ${this.props.geoInfo.region}`,
+          coordinate: this.props.geoInfo.coordinate,
+          user: this.props.userInfo._id,
+          description: this.state.description,
+        }
+        console.log("posting with..\n")
+        console.log(postingData)
 
-
-  // logging = () => {
-  //   const postingData = {
-  //     title: this.state.title,
-  //     img: this.state.imgURL,
-  //     location: this.state.location,
-  //     coordinate: this.state.coordinate,
-  //     user: this.props.userInfo._id
-  //   }
-  //   console.log(postingData)
-  // }
-
-  sendPost() {
-
-    if (this.state.imgURL) {
-
-      const postingData = {
-        title: this.state.title,
-        img: this.state.imgURL,
-        location: `${this.props.geoInfo.city}, ${this.props.geoInfo.region}`,
-        coordinate: this.props.geoInfo.coordinate,
-        user: this.props.userInfo._id,
-        description: this.state.description,
-      }
-      console.log("posting with..\n")
-      console.log(postingData)
-
-      axios.post("http://toolntool.herokuapp.com/api/posts/mobile", postingData)
-        .then(response => {
-          console.log(response.data)
-        })
+        axios.post("http://toolntool.herokuapp.com/api/posts/mobile", postingData)
+          .then(response => {
+            // console.log(response.data)
+            Alert.alert("Post Success!")
+            this.inputTitle.clearText()
+            this.inputDesc.clearText()
+            this.setState({ img: null })
+          })
+          .catch(err => console.log(err))
+      })
     }
-
     else {
       Alert.alert("Please complete the form")
     }
   }
+
 
 
   render() {
@@ -113,38 +107,29 @@ class PostPage extends React.Component {
         <View style={styles.container}>
 
           <ScrollView >
-
-            {image &&
-              <Image source={{ uri: image }} style={{ width: 400, height: 400 }} />}
-
+            <TouchableHighlight onPress={this._pickImage.bind(this)}>
+              <Image source={image ? { uri: image } : noImage} style={{ width: 400, height: 300 }} />
+            </TouchableHighlight>
 
             <FormLabel>Title</FormLabel>
-            <FormInput onChangeText={(title) => { this.setState({ title }) }} />
+            <FormInput placeholder="Post Title" onChangeText={(title) => { this.setState({ title }) }} ref={inputTitle => this.inputTitle = inputTitle} />
             {this.state.title ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
 
             <FormLabel>Location</FormLabel>
             <Text style={styles.text}>{this.props.geoInfo.city}, {this.props.geoInfo.region}</Text>
 
             <FormLabel>description</FormLabel>
-            <FormInput onChangeText={(description) => { this.setState({ description }) }} />
+            <FormInput placeholder="Post Description" onChangeText={(description) => { this.setState({ description }) }} ref={inputDesc => this.inputDesc = inputDesc} />
             {this.state.description ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
 
-            {!image &&
-              <Button
-                title="Insert Image"
-                onPress={this._pickImage.bind(this)}
-                buttonStyle={styles.button}
-              />
-            }
-
-            <Button
-              title="send post"
-              onPress={this.sendPost.bind(this)}
-              buttonStyle={styles.button}
-            />
-
           </ScrollView>
+          <TouchableOpacity
+            onPress={this.sendPost.bind(this)}
+            style={{ alignSelf:'center', alignItems: 'center', padding: 5, backgroundColor: 'black', height: 35, width: 200 }}>
 
+            <Text style={{ color: 'white', fontSize: 20 }}>Send Post</Text>
+
+          </TouchableOpacity>
 
         </View>
       )

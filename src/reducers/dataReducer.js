@@ -6,10 +6,12 @@ export default function reducer(state = {
     isSignedIn: false,
     isGeoStored: false,
     isConversationStored:false,
+    isUserPostStored:false,
     data: [],
     userInfo:{},
     geoInfo:{},
-    conversation:{},
+    conversation:[],
+    userPost:[],
     error: null,
 }, action) {
     switch (action.type) {
@@ -47,6 +49,13 @@ export default function reducer(state = {
                 ...state,
                 isConversationStored:true,
                 conversation: action.payload
+            }
+        }
+        case "STORE_USERPOST":{
+            return{
+                ...state,
+                isUserPostStored:true,
+                userPost: action.payload
             }
         }
 

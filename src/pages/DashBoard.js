@@ -1,12 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Button } from 'react-native';
 import { Location, Permissions } from 'expo';
 import { connect } from "react-redux";
 import axios from 'axios'
 import GoogleAuth from '../components/GoogleAuth/auth'
 import store from '../../store'
-import { FormLabel, FormInput, List, ListItem, Button } from 'react-native-elements'
+import { FormLabel, FormInput, List, ListItem } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
+import ConversationList from '../components/ConversationList/ConversationList'
 
 let mapStateToProps = (store) => {
     return {
@@ -14,6 +15,10 @@ let mapStateToProps = (store) => {
         geoInfo: store.data.geoInfo,
         isSignedIn: store.data.isSignedIn,
         isGeoStored: store.data.isGeoStored,
+        conversation: store.data.conversation,
+        isConversationStored: store.data.isConversationStored,
+        userPost: store.data.userPost,
+        isUserPostStored: store.data.isUserPostStored,
     }
 }
 
@@ -62,6 +67,11 @@ class DashBoard extends React.Component {
         console.log(this.props.userInfo)
         console.log("redux geo state")
         console.log(this.props.geoInfo)
+        console.log("redux conversation state")
+        console.log(this.props.conversation)
+        console.log("redux userPost state")
+        console.log(this.props.userPost)
+
 
     }
 
@@ -92,18 +102,37 @@ class DashBoard extends React.Component {
                 </View >
             )
         }
+        else if (this.props.isGeoStored && this.props.isSignedIn && !this.props.isConversationStored && !this.props.isUserPostStored) {
+            return (
+                <View style={styles.container}>
+                    <Text>
+                        Loading user data...
+                    </Text>
+                    <Text>
+                        {this.isConversationStored ? `User conversation loaded` : ``}
+                    </Text>
+                    <Text>
+                        {this.isUserPostStored ? `User post loaded` : ``}
+                    </Text>
+
+
+                </View>
+            )
+        }
         return (
             <View style={styles.container}>
 
                 <Text>Welcome! {this.props.userInfo.name.givenName}</Text>
 
-                <Button color="black"
+                <ConversationList navigation={this.props.navigation} />
+
+                {/* <Button color="black"
                     title="check log"
                     onPress={this.logData.bind(this)} />
 
                 <Button color="blue"
                     title="check userpost"
-                    onPress={this.getUserPosts.bind(this)} />
+                    onPress={this.getUserPosts.bind(this)} /> */}
 
             </View>
         )
