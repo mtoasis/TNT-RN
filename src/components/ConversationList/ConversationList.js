@@ -29,27 +29,26 @@ class ConversationList extends Component {
         return (
 
             <ScrollView>
+                <List>
                     {
                         list.map((conversation, key) => {
 
                             return (
-                                <TouchableOpacity
+                                <ListItem
                                 key={key} 
-                                style={styles.smallContainer}                                
                                 onPress={() => this.props.navigation.navigate('Message', {
                                     conversation: conversation,
                                     userInfo:this.props.userInfo
-                                })}>
-                                <Text style={styles.text}>
-                                    <Ionicons name="ios-chatboxes-outline" size={37} color="#FF5858" />
-                                    {this.props.userInfo._id === conversation.users[0]._id ?
-                                        `${conversation.users[1].name.givenName} ${conversation.users[1].name.familyName}`
-                                        : `${conversation.users[0].name.givenName} ${conversation.users[0].name.familyName}`}
-                                </Text>
-                            </TouchableOpacity>
+                                })}
+                                title={this.props.userInfo._id === conversation.users[0]._id ?
+                                    `${conversation.users[1].name.givenName} ${conversation.users[1].name.familyName}`
+                                    : `${conversation.users[0].name.givenName} ${conversation.users[0].name.familyName}`}
+                                
+                                />
                             )
                         })
                     }
+                    </List>
             </ScrollView>
 
         )
@@ -110,3 +109,18 @@ const styles = StyleSheet.create({
 // )}
 
 // />
+
+/* <TouchableOpacity
+key={key} 
+style={styles.smallContainer}                                
+onPress={() => this.props.navigation.navigate('Message', {
+    conversation: conversation,
+    userInfo:this.props.userInfo
+})}>
+<Text style={styles.text}>
+    <Ionicons name="ios-chatboxes-outline" size={37} color="#FF5858" />
+    {this.props.userInfo._id === conversation.users[0]._id ?
+        `${conversation.users[1].name.givenName} ${conversation.users[1].name.familyName}`
+        : `${conversation.users[0].name.givenName} ${conversation.users[0].name.familyName}`}
+</Text>
+</TouchableOpacity> */

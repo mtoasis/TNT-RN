@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, Alert } from 'react-native';
 import { Card, ListItem } from 'react-native-elements'
 import axios from 'axios'
 
@@ -13,15 +13,24 @@ export default class DetailPage extends React.Component {
     };
 
     startConv() {
+        const params = this.props.navigation.state.params
         axios.post("http://toolntool.herokuapp.com/api/mobile/startconversation", {
-            postUserId: this.props.navigation.state.params.postInfo.user._id,
-            userId: this.props.navigation.state.params.userInfo._id,
+            postUserId: params.postInfo.user._id,
+            userId: params.userInfo._id,
         }).then(response => {
             console.log(response.data)
-            this.props.navigation.navigate('Message', {
-                conversation: response.data,
-                userInfo: this.props.navigation.state.params.userInfo
-            })
+            if (response.data.length !== undefined) {
+
+                Alert.alert("You can't start conversation to your own post")
+            }
+            else {
+                this.props.navigation.navigate('Message', {
+                    conversation: response.data,
+                    userInfo: params.userInfo
+                })
+            }
+
+
         })
     }
 
@@ -29,7 +38,6 @@ export default class DetailPage extends React.Component {
     render() {
 
         const post = this.props.navigation.state.params.postInfo
-        // console.log(post)
 
 
         return (
@@ -37,37 +45,34 @@ export default class DetailPage extends React.Component {
 
                 <Card
                     title={post.title}
+                    titleStyle={styles.title}                    
                 >
-                    <View style={{ flexDirection: 'row' }}>
+                    <View>
                         <Image source={{ uri: `${post.img}` }}
                             style={{
-                                width: 200,
+                                width: 300,
                                 height: 200,
                                 marginRight: 30
                             }} />
                         <View>
-                            <Text style={{
-                                marginBottom: 10,
-                                fontWeight: "bold"
-                            }}>
+                            <Text style={styles.cardTextBold}>
                                 Description:
-                                        </Text>
-                            <Text style={{ marginBottom: 10 }}>
+                            </Text>
+                            <Text style={styles.cardText}>
                                 {post.description}
                             </Text>
-                            <Text style={{
-                                marginBottom: 10,
-                                fontWeight: "bold"
-                            }}>
+                            <Text style={styles.cardTextBold}>
                                 Location:
                                         </Text>
-                            <Text style={{ marginBottom: 10 }}>
+                            <Text style={styles.cardText}>
                                 {post.location}
                             </Text>
-
-                            <Button title="Rent" onPress={this.startConv.bind(this)} />
-                        </View>
+                            
+                        </View>                        
                     </View>
+                    {this.props.navigation.state.params.isSignedIn &&
+                    <Button title="Rent" onPress={this.startConv.bind(this)} />
+                    }
                 </Card>
 
             </View>
@@ -78,7 +83,19 @@ export default class DetailPage extends React.Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-
     },
+    cardTextBold:{
+        marginBottom: 10,
+        fontWeight: "bold",
+        fontSize:25
+    },
+    cardText:{
+        marginBottom: 10,
+        fontSize:20
+    },
+    title:{
+        fontSize:30,
+        fontWeight:"bold"
+    }
 
 });

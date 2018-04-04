@@ -7,7 +7,6 @@ import GoogleAuth from '../components/GoogleAuth/auth'
 import store from '../../store'
 import { FormLabel, FormInput, List, ListItem } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
-import ConversationList from '../components/ConversationList/ConversationList'
 
 let mapStateToProps = (store) => {
     return {
@@ -123,16 +122,6 @@ class DashBoard extends React.Component {
             <View style={styles.container}>
 
                 <Text>Welcome! {this.props.userInfo.name.givenName}</Text>
-
-                <ConversationList navigation={this.props.navigation} />
-
-                {/* <Button color="black"
-                    title="check log"
-                    onPress={this.logData.bind(this)} />
-
-                <Button color="blue"
-                    title="check userpost"
-                    onPress={this.getUserPosts.bind(this)} /> */}
 
             </View>
         )

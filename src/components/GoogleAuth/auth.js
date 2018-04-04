@@ -1,9 +1,10 @@
 import { Constants, Google, } from 'expo';
 import React, { Component } from 'react';
-import { Button, Alert, View, Text, StyleSheet } from "react-native";
+import { Button, Alert, View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import axios from 'axios'
 import { storeUser } from "../../actions/dataAction"
 import store from "../../../store"
+import { Ionicons } from '@expo/vector-icons'
 
 export default class GoogleAuth extends Component {
 
@@ -11,21 +12,22 @@ export default class GoogleAuth extends Component {
     super()
     this.state = {
       userInfo: null,
+      isButtonPressed: false,
     }
   }
 
   getUserPosts() {
     axios.post("http://toolntool.herokuapp.com/api/mobile/userposts", {
-        id: this.state.userInfo._id
+      id: this.state.userInfo._id
     })
-        .then(response => {
-          store.dispatch({
-            type: "STORE_USERPOST",
-            payload: response.data
-          })
-            console.log("user post stored")
+      .then(response => {
+        store.dispatch({
+          type: "STORE_USERPOST",
+          payload: response.data
         })
-}
+        console.log("user post stored")
+      })
+  }
 
   getConversation = async () => {
     console.log("requesting conversation... ")
@@ -41,11 +43,12 @@ export default class GoogleAuth extends Component {
         this.getUserPosts()
         console.log("conversation loaded")
       })
-    
+
   }
 
 
   _handleGoogleLogin = async () => {
+    this.setState({ isButtonPressed: true })
     try {
       const { type, user } = await Google.logInAsync({
         androidStandaloneAppClientId: '<ANDROID_CLIENT_ID>',
@@ -74,7 +77,7 @@ export default class GoogleAuth extends Component {
 
           axios.post("http://toolntool.herokuapp.com/auth/mobile", info)
             .then(response => {
-              this.setState({userInfo:response.data})
+              this.setState({ userInfo: response.data })
               let res = store.dispatch({
                 type: "STORE_USER",
                 payload: response.data
@@ -108,15 +111,22 @@ export default class GoogleAuth extends Component {
   };
 
   render() {
+
+    if (!this.state.isButtonPressed) {
+      return (
+
+        <TouchableOpacity style={{ width: 230, height: 50, backgroundColor: "tomato", borderColor: "#800000", borderWidth: 1 }} onPress={this._handleGoogleLogin}>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
+            <Ionicons name="logo-google" size={35} color="white" />
+            <Text style={{ fontSize: 20, color: "white", marginLeft: 5, fontWeight: "bold" }}>Login Using Google </Text>
+          </View>
+        </TouchableOpacity>
+      )
+    }
     return (
-
-      <Button
-        color="red"
-        title="Login with Google"
-        onPress={this._handleGoogleLogin}
-      />
-
+      <Text>Loading User Data </Text>
     )
+
   }
 
 }

@@ -1,11 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, Alert, TouchableHighlight, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, Alert, TouchableHighlight, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements'
 import { Constants, ImagePicker, Ionicons } from 'expo';
 import { postData } from '../actions/dataAction'
 import { connect } from "react-redux";
 import axios from 'axios'
 import noImage from '../resource/Img/noImage.png'
+import Modal from 'react-native-modal';
+import { Calendar } from 'react-native-calendars';
+
 
 let mapStateToProps = (store) => {
   return {
@@ -30,15 +33,17 @@ class PostPage extends React.Component {
       image: null,
       imgURL: null,
       base64: null,
+      visibleModal: null,
+      markedDate: null,
     };
   }
 
-  _pickImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
+  cameraPickImage = async () => {
+    let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
       base64: true
-    });
+    })
 
     if (!result.cancelled) {
       this.setState({
@@ -46,7 +51,25 @@ class PostPage extends React.Component {
         base64: result.base64,
       })
     }
+    this.setState({ visibleModal: null })
   }
+
+  libraryPickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      allowsEditing: true,
+      aspect: [4, 3],
+      base64: true
+    })
+
+    if (!result.cancelled) {
+      this.setState({
+        image: result.uri,
+        base64: result.base64,
+      })
+    }
+    this.setState({ visibleModal: null })
+  }
+
 
   sendPost() {
     if (this.state.image && this.state.title !== "" && this.state.description !== "") {
@@ -87,7 +110,7 @@ class PostPage extends React.Component {
             Alert.alert("Post Success!")
             this.inputTitle.clearText()
             this.inputDesc.clearText()
-            this.setState({ img: null })
+            this.setState({ image: null })
           })
           .catch(err => console.log(err))
       })
@@ -105,9 +128,9 @@ class PostPage extends React.Component {
     if (this.props.isSignedIn) {
       return (
         <View style={styles.container}>
-
-          <ScrollView >
-            <TouchableHighlight onPress={this._pickImage.bind(this)}>
+        <KeyboardAvoidingView behavior="padding" style={styles.form}>
+          <ScrollView>
+            <TouchableHighlight onPress={() => this.setState({ visibleModal: 1 })}>
               <Image source={image ? { uri: image } : noImage} style={{ width: 400, height: 300 }} />
             </TouchableHighlight>
 
@@ -118,19 +141,68 @@ class PostPage extends React.Component {
             <FormLabel>Location</FormLabel>
             <Text style={styles.text}>{this.props.geoInfo.city}, {this.props.geoInfo.region}</Text>
 
+            <FormLabel>Available Date</FormLabel>
+            <Text onPress={() => this.setState({ visibleModal: 2 })} style={styles.text}>{this.state.markedDate? this.state.markedDate:`Click to set date`}</Text>
+
             <FormLabel>description</FormLabel>
             <FormInput placeholder="Post Description" onChangeText={(description) => { this.setState({ description }) }} ref={inputDesc => this.inputDesc = inputDesc} />
             {this.state.description ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
-
+            
+ 
           </ScrollView>
+
           <TouchableOpacity
             onPress={this.sendPost.bind(this)}
-            style={{ alignSelf:'center', alignItems: 'center', padding: 5, backgroundColor: 'black', height: 35, width: 200 }}>
+            style={{ alignSelf: 'center', alignItems: 'center', padding: 5, backgroundColor: 'black', height: 35, width: 200, marginBottom:50 }}>
 
             <Text style={{ color: 'white', fontSize: 20 }}>Send Post</Text>
 
           </TouchableOpacity>
 
+        {/* camera modal */}
+          <Modal isVisible={this.state.visibleModal === 1}>
+            <View style={styles.modalContent}>
+
+              <TouchableOpacity onPress={this.cameraPickImage.bind(this)}>
+                <View style={styles.modalButton}>
+                  <Text>Take Picture</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={this.libraryPickImage.bind(this)}>
+                <View style={styles.modalButton}>
+                  <Text>Open Gallery</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => this.setState({ visibleModal: null })}>
+                <View style={styles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+
+        {/* calendar modal */}
+          <Modal isVisible={this.state.visibleModal === 2}>
+            <View style={styles.modalContent}>
+
+              <Calendar
+                onDayPress={(day) => {
+                  this.setState({ markedDate: day.dateString })
+                  console.log(this.state.marked)
+                }}
+              />
+              <Text style={styles.calenderText}>{this.state.markedDate ? this.state.markedDate : "Year-Month-Date"}</Text>
+
+              <TouchableOpacity onPress={() => this.setState({ visibleModal: null })}>
+                <View style={styles.modalButton}>
+                  <Text>Close</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+          </KeyboardAvoidingView>
         </View>
       )
     }
@@ -162,6 +234,28 @@ const styles = StyleSheet.create({
   text: {
     marginLeft: 40
   },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 22,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  modalButton: {
+    backgroundColor: 'lightblue',
+    padding: 12,
+    margin: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    borderColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  calenderText: {
+    fontSize: 20,
+    marginTop: 20
+  }
+
 
 });
 

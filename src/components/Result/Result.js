@@ -10,7 +10,8 @@ import { StackNavigator } from 'react-navigation';
 let mapStateToProps = (store) => {
     return {
         data: store.data.data,
-        userInfo: store.data.userInfo
+        userInfo: store.data.userInfo,
+        isSignedIn: store.data.isSignedIn,
     }
 }
 
@@ -83,7 +84,8 @@ class Result extends Component {
                                 title='See Detail'
                                 onPress={() => this.props.navigation.navigate('Detail', {
                                     postInfo:post,
-                                    userInfo:this.props.userInfo
+                                    userInfo:this.props.userInfo,
+                                    isSignedIn:this.props.isSignedIn
                                 })
 
                                 }

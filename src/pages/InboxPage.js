@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import store from '../../store'
 import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
 import ConversationList from '../components/ConversationList/ConversationList'
+import { Ionicons } from '@expo/vector-icons';
 
 
 let mapStateToProps = (store) => {
@@ -72,14 +73,16 @@ class InboxPage extends React.Component {
             )
         }
         return (
-            <View style={styles.container}>
+            <View>
                 <ConversationList navigation={this.props.navigation} />
-                <TouchableOpacity onPress={this.getConversation.bind(this)}>
-
-                    <Text>
-                        Refresh Inbox
-                </Text>
-                </TouchableOpacity>
+                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                    <TouchableOpacity style={{ width: 230, height: 50, backgroundColor: "lightblue", borderColor: "grey", borderWidth: 1 }} onPress={this.getConversation.bind(this)}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
+                            <Ionicons name="ios-refresh" size={35} color="white" />
+                            <Text style={{ fontSize: 20, color: "white", marginLeft: 5, fontWeight: "bold" }}>Refresh Inbox </Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
             </View>
         )
     }
