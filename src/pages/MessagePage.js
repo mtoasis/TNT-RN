@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, KeyboardAvoidingView } from 'react-native';
 import { FormLabel, FormInput, List, ListItem, Button } from 'react-native-elements'
 import axios from 'axios'
 import { Ionicons } from '@expo/vector-icons';
@@ -81,6 +81,8 @@ export default class MessagePage extends React.Component {
         const params = this.props.navigation.state.params
         return (
             <View style={styles.container}>
+            <KeyboardAvoidingView behavior="padding" style={styles.form}>
+
                 <ScrollView style={{ height: "80%", width: "100%", borderColor: "white" }} ref={(scrollView) => { this.scrollView = scrollView }}>
                     {
                         msg.slice(0).reverse().map((message, key) => {
@@ -117,25 +119,29 @@ export default class MessagePage extends React.Component {
                 </ScrollView >
 
                 <View style={{ flexDirection: 'row', }}>
+                    
+                        <FormInput
+                            containerStyle={{
+                                width: 250,
+                                height: 50,
+                                backgroundColor: "white",
+                                marginLeft: 10
+                            }}
+                            inputStyle={{ fontSize: 20 }}
+                            onChangeText={(newMessage) => { this.setState({ newMessage }) }}
+                            onSubmitEditing={this.sendMessage.bind(this)}
+                            ref={input => this.input = input}
+                            placeholder="Type message"
+                        />
 
-                    <FormInput
-                        containerStyle={{
-                            width: 250,
-                            height: 50,
-                            backgroundColor: "white",
-                            marginLeft: 10
-                        }}
-                        inputStyle={{ fontSize: 20 }}
-                        onChangeText={(newMessage) => { this.setState({ newMessage }) }}
-                        ref={input => this.input = input}
-                        placeholder="Type message"
-                    />
-
-                    <Button buttonStyle={{ width: 80, height: 50, borderWidth: 1, borderColor: "grey", marginRight: 10 }}
-                        backgroundColor="#D2D2D2"
-                        icon={{ name: 'send', size: 30, }}
-                        onPress={this.sendMessage.bind(this)} />
+                        <Button buttonStyle={{ width: 80, height: 50, borderWidth: 1, borderColor: "grey", marginRight: 10 }}
+                            backgroundColor="#D2D2D2"
+                            icon={{ name: 'send', size: 30, }}
+                            onPress={this.sendMessage.bind(this)} />
+                    
                 </View>
+                </KeyboardAvoidingView>
+
             </View>
         )
     }
@@ -185,5 +191,9 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-end',
         marginBottom: 30,
         marginRight: 10
-    }
+    },
+    form: {
+        flex: 1,
+        justifyContent: 'space-between',
+      },
 });

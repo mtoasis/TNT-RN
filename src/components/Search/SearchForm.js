@@ -49,6 +49,8 @@ class SearchForm extends Component {
                         width: 250,
                         color:"black",
                         fontSize:25,
+                        borderColor:"gray",
+                        borderRadius:20
                     }}
                 />
             </View>

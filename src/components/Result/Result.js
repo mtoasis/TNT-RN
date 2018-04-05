@@ -65,7 +65,7 @@ class Result extends Component {
         else if (this.props.isMapView) {
             return (
                 <View>
-                    <Button title="logging" onPress={this.logging.bind(this)} />
+                    {/* <Button title="logging" onPress={this.logging.bind(this)} /> */}
 
                     <MapView
                         initialRegion={{

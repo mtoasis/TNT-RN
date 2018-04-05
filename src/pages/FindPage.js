@@ -4,9 +4,15 @@ import SearchForm from '../components/Search'
 import Result from '../components/Result'
 import { Ionicons } from '@expo/vector-icons';
 import MapButton from '../components/MapButton/MapButton'
+import { connect } from "react-redux";
 
+let mapStateToProps = (store) => {
+    return {
+        isMapView: store.data.isMapView
+    }
+  }
 
-export default class FindPage extends React.Component {
+class FindPage extends React.Component {
     static navigationOptions = {
         headerTitle: <MapButton />
     };
@@ -14,7 +20,8 @@ export default class FindPage extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <SearchForm />
+            {!this.props.isMapView && <SearchForm />}
+                
                 <Result navigation={this.props.navigation} />
             </View>
         )
@@ -26,3 +33,6 @@ const styles = StyleSheet.create({
         flex: 1,
     }
 });
+
+
+export default connect(mapStateToProps)(FindPage)

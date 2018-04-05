@@ -254,7 +254,11 @@ const styles = StyleSheet.create({
   calenderText: {
     fontSize: 20,
     marginTop: 20
-  }
+  },
+  form: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
 
 
 });
