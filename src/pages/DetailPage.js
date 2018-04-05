@@ -9,6 +9,13 @@ export default class DetailPage extends React.Component {
         const { params } = navigation.state;
         return {
             title: params ? params.postInfo.title : 'A Nested Details Screen',
+            headerStyle: {
+                backgroundColor: 'black',
+            },
+            headerTitleStyle: {
+                color: "white"
+            },
+            headerTintColor: 'white',
         }
     };
 
@@ -45,7 +52,7 @@ export default class DetailPage extends React.Component {
 
                 <Card
                     title={post.title}
-                    titleStyle={styles.title}                    
+                    titleStyle={styles.title}
                 >
                     <View>
                         <Image source={{ uri: `${post.img}` }}
@@ -67,11 +74,11 @@ export default class DetailPage extends React.Component {
                             <Text style={styles.cardText}>
                                 {post.location}
                             </Text>
-                            
-                        </View>                        
+
+                        </View>
                     </View>
                     {this.props.navigation.state.params.isSignedIn &&
-                    <Button title="Request Rent" onPress={this.startConv.bind(this)} />
+                        <Button title="Request Rent" onPress={this.startConv.bind(this)} />
                     }
                 </Card>
 
@@ -84,18 +91,18 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    cardTextBold:{
+    cardTextBold: {
         marginBottom: 10,
         fontWeight: "bold",
-        fontSize:25
+        fontSize: 25
     },
-    cardText:{
+    cardText: {
         marginBottom: 10,
-        fontSize:20
+        fontSize: 20
     },
-    title:{
-        fontSize:30,
-        fontWeight:"bold"
+    title: {
+        fontSize: 30,
+        fontWeight: "bold"
     }
 
 });

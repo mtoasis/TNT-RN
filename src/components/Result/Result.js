@@ -6,7 +6,8 @@ import { fetchAll, fetchDataSelected } from '../../actions/dataAction'
 import { StackNavigator } from 'react-navigation';
 import MapView, { Marker } from 'react-native-maps';
 import { getLocationAsync } from '../../actions/getActions'
-
+import loader from '../../resource/Img/loader.gif'
+import { Ionicons } from '@expo/vector-icons';
 
 let mapStateToProps = (store) => {
     return {
@@ -32,22 +33,15 @@ class Result extends Component {
         this.props.dispatch(fetchAll())
     }
 
-    logging() {
-        console.log("geo info")
-        console.log(this.props.geoInfo)
-        console.log("items")
-        console.log(this.props.data[0].coordinate.latitude)
-
-    }
-
     render() {
         const { data } = this.props;
         if (!this.props.isGeoStored) {
             return (
                 <View style={styles.container}>
                     <Text>
-                        App Loading
+                        App is Loading
                     </Text>
+                    <Image source={loader} style={{ width: 50, height: 50 }} />
                 </View>
             )
         }
@@ -58,6 +52,7 @@ class Result extends Component {
                     <Text>
                         No Result to show
                     </Text>
+                    <Ionicons name="ios-alert-outline" size={45} color="black" />
                 </View>
             )
         }
@@ -65,8 +60,6 @@ class Result extends Component {
         else if (this.props.isMapView) {
             return (
                 <View>
-                    {/* <Button title="logging" onPress={this.logging.bind(this)} /> */}
-
                     <MapView
                         initialRegion={{
                             latitude: this.props.geoInfo.coordinate.latitude,
@@ -76,7 +69,7 @@ class Result extends Component {
                         }}
                         style={{
                             width: 400,
-                            height: 400,
+                            height: 700,
                         }}
                     >
                         {data.map((post, key) => (
@@ -92,7 +85,6 @@ class Result extends Component {
                                     isSignedIn: this.props.isSignedIn
                                 })}
                             />
-
                         ))}
 
                     </MapView>
@@ -107,8 +99,9 @@ class Result extends Component {
                     <View key={key}>
                         <Card
                             title={post.title}
+                            titleStyle={styles.title}   
                         >
-                            <View style={{ flexDirection: 'row' }}>
+                            <View style={{ flexDirection: 'row', marginBottom: 15}}>
                                 <Image source={{ uri: `${post.img}` }}
                                     style={{
                                         width: 200,
@@ -145,7 +138,6 @@ class Result extends Component {
                                     userInfo: this.props.userInfo,
                                     isSignedIn: this.props.isSignedIn
                                 })
-
                                 }
                             />
                         </Card>
@@ -167,5 +159,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white'
+    },
+    title:{
+        fontSize:20,
+        fontWeight:"bold"
     }
+
 });

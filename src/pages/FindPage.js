@@ -8,20 +8,24 @@ import { connect } from "react-redux";
 
 let mapStateToProps = (store) => {
     return {
-        isMapView: store.data.isMapView
+        isMapView: store.data.isMapView,
+        isSearchOn: store.data.isSearchOn,
     }
-  }
+}
+
 
 class FindPage extends React.Component {
     static navigationOptions = {
-        headerTitle: <MapButton />
+        headerTitle: <MapButton />,
+        headerStyle: {
+            backgroundColor: 'black',
+        },
     };
 
     render() {
         return (
             <View style={styles.container}>
-            {!this.props.isMapView && <SearchForm />}
-                
+               {this.props.isSearchOn && <SearchForm />} 
                 <Result navigation={this.props.navigation} />
             </View>
         )

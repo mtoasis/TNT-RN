@@ -10,7 +10,14 @@ export default class MessagePage extends React.Component {
         return {
             title: params.conversation.users[0]._id === params.userInfo._id ?
                 `${params.conversation.users[1].name.givenName} ${params.conversation.users[1].name.familyName}`
-                : `${params.conversation.users[0].name.givenName} ${params.conversation.users[0].name.familyName}`
+                : `${params.conversation.users[0].name.givenName} ${params.conversation.users[0].name.familyName}`,
+            headerStyle: {
+                backgroundColor: 'black',
+            },
+            headerTitleStyle: {
+                color: "white"
+            },
+            headerTintColor: 'white',
         }
     };
 
@@ -81,45 +88,45 @@ export default class MessagePage extends React.Component {
         const params = this.props.navigation.state.params
         return (
             <View style={styles.container}>
-            <KeyboardAvoidingView behavior="padding" style={styles.form}>
+                <KeyboardAvoidingView behavior="padding" style={styles.form}>
 
-                <ScrollView style={{ height: "80%", width: "100%", borderColor: "white" }} ref={(scrollView) => { this.scrollView = scrollView }}>
-                    {
-                        msg.slice(0).reverse().map((message, key) => {
+                    <ScrollView style={{ height: "80%", width: "100%", borderColor: "white" }} ref={(scrollView) => { this.scrollView = scrollView }}>
+                        {
+                            msg.slice(0).reverse().map((message, key) => {
 
-                            return (
+                                return (
 
-                                <View key={key} style={message.sender._id === params.userInfo._id ?
-                                    styles.rightAlign : styles.leftAlign}>
+                                    <View key={key} style={message.sender._id === params.userInfo._id ?
+                                        styles.rightAlign : styles.leftAlign}>
 
-                                    <Text style={message.sender._id === params.userInfo._id ?
-                                        styles.nameRight : styles.nameLeft}>
+                                        <Text style={message.sender._id === params.userInfo._id ?
+                                            styles.nameRight : styles.nameLeft}>
 
-                                        {message.sender._id === params.userInfo._id ?
-                                            `${params.conversation.users[1].name.givenName} ${params.conversation.users[1].name.familyName}`
-                                            : `${message.sender.name.givenName} ${message.sender.name.familyName}`}
-                                    </Text>
+                                            {message.sender._id === params.userInfo._id ?
+                                                `${params.conversation.users[1].name.givenName} ${params.conversation.users[1].name.familyName}`
+                                                : `${message.sender.name.givenName} ${message.sender.name.familyName}`}
+                                        </Text>
 
-                                    <Text style={message.sender._id === params.userInfo._id ?
-                                        styles.msgRight : styles.msgLeft}
-                                    >
-                                        {message.content}
+                                        <Text style={message.sender._id === params.userInfo._id ?
+                                            styles.msgRight : styles.msgLeft}
+                                        >
+                                            {message.content}
 
-                                    </Text>
+                                        </Text>
 
-                                    <Text style={message.sender._id === params.userInfo._id ?
-                                        styles.nameRight : styles.nameLeft}>
+                                        <Text style={message.sender._id === params.userInfo._id ?
+                                            styles.nameRight : styles.nameLeft}>
 
-                                        {message.date.slice(0, 10)}, {message.date.slice(11, 16)}
-                                    </Text>
-                                </View>
-                            )
-                        })
-                    }
-                </ScrollView >
+                                            {message.date.slice(0, 10)}, {message.date.slice(11, 16)}
+                                        </Text>
+                                    </View>
+                                )
+                            })
+                        }
+                    </ScrollView >
 
-                <View style={{ flexDirection: 'row', }}>
-                    
+                    <View style={{ flexDirection: 'row', }}>
+
                         <FormInput
                             containerStyle={{
                                 width: 250,
@@ -138,8 +145,8 @@ export default class MessagePage extends React.Component {
                             backgroundColor="#D2D2D2"
                             icon={{ name: 'send', size: 30, }}
                             onPress={this.sendMessage.bind(this)} />
-                    
-                </View>
+
+                    </View>
                 </KeyboardAvoidingView>
 
             </View>
@@ -195,5 +202,5 @@ const styles = StyleSheet.create({
     form: {
         flex: 1,
         justifyContent: 'space-between',
-      },
+    },
 });

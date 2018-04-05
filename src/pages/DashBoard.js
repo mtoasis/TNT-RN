@@ -7,6 +7,7 @@ import store from '../../store'
 import { FormLabel, FormInput, List, ListItem } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
 import { getLocationAsync } from '../actions/getActions'
+import loader from '../resource/Img/loader.gif'
 
 let mapStateToProps = (store) => {
     return {
@@ -30,7 +31,7 @@ class DashBoard extends React.Component {
     componentWillMount() {
         getLocationAsync()
     }
- 
+
 
     logData() {
         console.log("redux user state")
@@ -50,8 +51,12 @@ class DashBoard extends React.Component {
             return (
                 <View style={styles.container}>
                     <Text>
-                        App is loading
+                        Initialize App,
                     </Text>
+                    <Text>
+                        Please Press "YES" on location permission
+                    </Text>
+                    <Image source={loader} style={{ width: 50, height: 50 }} />
                 </View>
             )
         }
@@ -68,6 +73,7 @@ class DashBoard extends React.Component {
                     <Text>
                         Loading user data...
                     </Text>
+                    <Image source={loader} style={{ width: 50, height: 50 }} />
                     <Text>
                         {this.isConversationStored ? `User conversation loaded` : ``}
                     </Text>

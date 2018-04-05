@@ -1,13 +1,15 @@
 import React from 'react';
 import { StyleSheet, Text, View, ScrollView, Image, Alert, TouchableHighlight, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements'
-import { Constants, ImagePicker, Ionicons } from 'expo';
+import { Constants, ImagePicker } from 'expo';
 import { postData } from '../actions/dataAction'
 import { connect } from "react-redux";
 import axios from 'axios'
 import noImage from '../resource/Img/noImage.png'
 import Modal from 'react-native-modal';
 import { Calendar } from 'react-native-calendars';
+import loader from '../resource/Img/loader.gif'
+import { Ionicons } from '@expo/vector-icons';
 
 
 let mapStateToProps = (store) => {
@@ -23,6 +25,12 @@ class PostPage extends React.Component {
 
   static navigationOptions = {
     title: "Post Tool",
+    headerStyle: {
+      backgroundColor: 'black',
+    },
+    headerTitleStyle: {
+      color: "white"
+    },
   }
 
   constructor() {
@@ -35,7 +43,14 @@ class PostPage extends React.Component {
       base64: null,
       visibleModal: null,
       markedDate: null,
+      price: null,
+      isSent: false,
     };
+  }
+
+  componentWillMount() {
+    this.setState({ isSent: false })
+    console.log(`isSent state is: ${this.state.isSent}`)
   }
 
   cameraPickImage = async () => {
@@ -70,9 +85,19 @@ class PostPage extends React.Component {
     this.setState({ visibleModal: null })
   }
 
+  saveDate(date){    
+    this.setState({ markedDate: date })
+  }
+
 
   sendPost() {
-    if (this.state.image && this.state.title !== "" && this.state.description !== "") {
+    if (this.state.image && 
+      this.state.title !== "" && 
+      this.state.description !== "" &&
+      !this.state.price  &&
+      !this.state.markedDate 
+    ) {
+      this.setState({ visibleModal: 3 })
       console.log("sending post")
 
       let base64Img = `data:image/jpg;base64,${this.state.base64}`
@@ -89,8 +114,8 @@ class PostPage extends React.Component {
           'content-type': 'application/json'
         },
         method: 'POST',
-      }).then(r => {
-        let data = r._bodyText
+      }).then(response => {
+        let data = response._bodyText
         this.setState({ imgURL: JSON.parse(data).secure_url })
 
         const postingData = {
@@ -100,17 +125,28 @@ class PostPage extends React.Component {
           coordinate: this.props.geoInfo.coordinate,
           user: this.props.userInfo._id,
           description: this.state.description,
+          price: this.state.price,
+          availableDate: this.state.markedDate
         }
         console.log("posting with..\n")
         console.log(postingData)
 
         axios.post("http://toolntool.herokuapp.com/api/posts/mobile", postingData)
           .then(response => {
-            // console.log(response.data)
-            Alert.alert("Post Success!")
+            
             this.inputTitle.clearText()
             this.inputDesc.clearText()
-            this.setState({ image: null })
+            this.inputPrice.clearText()
+            this.setState({ 
+              isSent: true,
+              markedDate:null,
+              image: null,
+            })
+            this.timerID = setInterval(
+              () => this.setState({ visibleModal: null }),
+              1500
+            );
+
           })
           .catch(err => console.log(err))
       })
@@ -122,86 +158,102 @@ class PostPage extends React.Component {
 
 
 
+
   render() {
     let { image } = this.state;
 
     if (this.props.isSignedIn) {
       return (
         <View style={styles.container}>
-        <KeyboardAvoidingView behavior="padding" style={styles.form}>
-          <ScrollView>
-            <TouchableHighlight onPress={() => this.setState({ visibleModal: 1 })}>
-              <Image source={image ? { uri: image } : noImage} style={{ width: 400, height: 300 }} />
-            </TouchableHighlight>
+          <KeyboardAvoidingView behavior="padding" style={styles.form}>
+            <ScrollView>
+              <TouchableHighlight onPress={() => this.setState({ visibleModal: 1 })}>
+                <Image source={image ? { uri: image } : noImage} style={{ width: 400, height: 300 }} />
+              </TouchableHighlight>
 
-            <FormLabel>Title</FormLabel>
-            <FormInput placeholder="Post Title" onChangeText={(title) => { this.setState({ title }) }} ref={inputTitle => this.inputTitle = inputTitle} />
-            {this.state.title ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
+              <FormLabel>Title</FormLabel>
+              <FormInput maxLength={20} placeholder="Post Title (Max Character: 20)" onChangeText={(title) => { this.setState({ title }) }} ref={inputTitle => this.inputTitle = inputTitle} />
+              {this.state.title ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
 
-            <FormLabel>Location</FormLabel>
-            <Text style={styles.text}>{this.props.geoInfo.city}, {this.props.geoInfo.region}</Text>
+              <FormLabel>Price</FormLabel>
+              <FormInput keyboardType='numeric' placeholder="Price (USD/day)" onChangeText={(price) => { this.setState({ price }) }} ref={inputPrice => this.inputPrice = inputPrice} />
+              {this.state.price ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
 
-            <FormLabel>Available Date</FormLabel>
-            <Text onPress={() => this.setState({ visibleModal: 2 })} style={styles.text}>{this.state.markedDate? this.state.markedDate:`Click to set date`}</Text>
+              <FormLabel>Location</FormLabel>
+              <Text style={styles.text}>{this.props.geoInfo.city}, {this.props.geoInfo.region}</Text>
 
-            <FormLabel>description</FormLabel>
-            <FormInput placeholder="Post Description" onChangeText={(description) => { this.setState({ description }) }} ref={inputDesc => this.inputDesc = inputDesc} />
-            {this.state.description ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
-            
- 
-          </ScrollView>
+              <FormLabel>Available Date</FormLabel>
+              <Text onPress={() => this.setState({ visibleModal: 2 })} style={styles.text}>{this.state.markedDate ? this.state.markedDate : `Click to set date`}</Text>
 
-          <TouchableOpacity
-            onPress={this.sendPost.bind(this)}
-            style={{ alignSelf: 'center', alignItems: 'center', padding: 5, backgroundColor: 'black', height: 35, width: 200, marginBottom:25, marginTop:25 }}>
+              <FormLabel>description</FormLabel>
+              <FormInput placeholder="Post Description" onChangeText={(description) => { this.setState({ description }) }} ref={inputDesc => this.inputDesc = inputDesc} />
+              {this.state.description ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
 
-            <Text style={{ color: 'white', fontSize: 20 }}>Send Post</Text>
 
-          </TouchableOpacity>
+            </ScrollView>
 
-        {/* camera modal */}
-          <Modal isVisible={this.state.visibleModal === 1}>
-            <View style={styles.modalContent}>
+            <TouchableOpacity
+              onPress={this.sendPost.bind(this)}
+              style={{ alignSelf: 'center', alignItems: 'center', padding: 5, backgroundColor: 'black', height: 35, width: 200, marginBottom: 25, marginTop: 25 }}>
 
-              <TouchableOpacity onPress={this.cameraPickImage.bind(this)}>
-                <View style={styles.modalButton}>
-                  <Text>Take Picture</Text>
-                </View>
-              </TouchableOpacity>
+              <Text style={{ color: 'white', fontSize: 20 }}>Send Post</Text>
 
-              <TouchableOpacity onPress={this.libraryPickImage.bind(this)}>
-                <View style={styles.modalButton}>
-                  <Text>Open Gallery</Text>
-                </View>
-              </TouchableOpacity>
+            </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => this.setState({ visibleModal: null })}>
-                <View style={styles.modalButton}>
-                  <Text>Close</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </Modal>
 
-        {/* calendar modal */}
-          <Modal isVisible={this.state.visibleModal === 2}>
-            <View style={styles.modalContent}>
 
-              <Calendar
-                onDayPress={(day) => {
-                  this.setState({ markedDate: day.dateString })
-                  console.log(this.state.marked)
-                }}
-              />
-              <Text style={styles.calenderText}>{this.state.markedDate ? this.state.markedDate : "Year-Month-Date"}</Text>
+            {/* camera modal */}
+            <Modal isVisible={this.state.visibleModal === 1}>
+              <View style={styles.modalContent}>
 
-              <TouchableOpacity onPress={() => this.setState({ visibleModal: null })}>
-                <View style={styles.modalButton}>
-                  <Text>Close</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          </Modal>
+                <TouchableOpacity onPress={this.cameraPickImage.bind(this)}>
+                  <View style={styles.modalButton}>
+                    <Text style={styles.modalText}>Take Picture</Text>
+                  </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={this.libraryPickImage.bind(this)}>
+                  <View style={styles.modalButton}>
+                    <Text style={styles.modalText}>Open Gallery</Text>
+                  </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => this.setState({ visibleModal: null })}>
+                  <View style={styles.modalButton}>
+                    <Text style={styles.modalText}>Close</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </Modal>
+
+            {/* calendar modal */}
+            <Modal isVisible={this.state.visibleModal === 2}>
+              <View style={styles.modalContent}>
+
+                <Calendar
+                  onDayPress={(day) => {
+                    this.saveDate(day.dateString)
+
+                  }}
+                />
+                <Text style={styles.calenderText}>{this.state.markedDate ? this.state.markedDate : "Year-Month-Date"}</Text>
+
+                <TouchableOpacity onPress={() => this.setState({ visibleModal: null })}>
+                  <View style={styles.modalButton}>
+                    <Text style={styles.modalText}>Close</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            </Modal>
+
+            <Modal isVisible={this.state.visibleModal === 3}>
+              <View style={styles.modalContent}>
+                <Text style={styles.calenderText}>{this.state.isSent ? `Post Sucess!` : `Sending Post...`}</Text>
+                {this.state.isSent ? <Ionicons name="md-checkmark" size={35} color="black" /> : <Image source={loader} style={{ width: 50, height: 50 }} />}
+              </View>
+            </Modal>
+
+
           </KeyboardAvoidingView>
         </View>
       )
@@ -243,7 +295,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0, 0, 0, 0.1)',
   },
   modalButton: {
-    backgroundColor: 'lightblue',
+    backgroundColor: 'black',
     padding: 12,
     margin: 16,
     justifyContent: 'center',
@@ -259,6 +311,9 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
   },
+  modalText: {
+    color: "white"
+  }
 
 
 });

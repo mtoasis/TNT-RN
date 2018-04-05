@@ -69,8 +69,7 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         color: "#FF5858",
-        marginLeft: 15,
-        // alignItems: 'center',        
+        marginLeft: 15,     
     },
     boxContainer: {
         width: "95%",
@@ -78,7 +77,6 @@ const styles = StyleSheet.create({
         backgroundColor: "white",
         borderColor: "black",
         borderWidth: 1,
-        // paddingVertical: 20,
         padding:20,
     },
     smallContainer: {
@@ -89,38 +87,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 20,
         flexDirection: 'row',
-        // justifyContent: 'center',
-        // alignItems:'center',
         marginBottom: 15,
     },
 });
 
 
-// <ListItem key={key}
-// titleStyle={{ marginLeft: 30, fontSize: 25 }}
-// title={this.props.userInfo._id === conversation.users[0]._id ?
-//     `${conversation.users[1].name.givenName} ${conversation.users[1].name.familyName}`
-//     : `${conversation.users[0].name.givenName} ${conversation.users[0].name.familyName}`}
-
-// onPress={() => this.props.navigation.navigate('Message', {
-//     conversation: conversation,
-//     userInfo:this.props.userInfo
-// }
-// )}
-
-// />
-
-/* <TouchableOpacity
-key={key} 
-style={styles.smallContainer}                                
-onPress={() => this.props.navigation.navigate('Message', {
-    conversation: conversation,
-    userInfo:this.props.userInfo
-})}>
-<Text style={styles.text}>
-    <Ionicons name="ios-chatboxes-outline" size={37} color="#FF5858" />
-    {this.props.userInfo._id === conversation.users[0]._id ?
-        `${conversation.users[1].name.givenName} ${conversation.users[1].name.familyName}`
-        : `${conversation.users[0].name.givenName} ${conversation.users[0].name.familyName}`}
-</Text>
-</TouchableOpacity> */

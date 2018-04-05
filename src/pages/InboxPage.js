@@ -6,6 +6,7 @@ import store from '../../store'
 import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
 import ConversationList from '../components/ConversationList/ConversationList'
 import { Ionicons } from '@expo/vector-icons';
+import RefreshButton from '../components/RefreshButton/RefreshButton'
 
 
 let mapStateToProps = (store) => {
@@ -24,6 +25,13 @@ class InboxPage extends React.Component {
 
     static navigationOptions = {
         title: "Inbox",
+        headerStyle: {
+            backgroundColor: 'black',
+        },
+        headerRight:<RefreshButton />,
+        headerTitleStyle: {
+            color: "white"
+        },
     };
 
     constructor() {
@@ -31,27 +39,6 @@ class InboxPage extends React.Component {
         this.state = {
             message: null,
         }
-    }
-
-    getConversation = async () => {
-        console.log("requesting conversation... \n\n")
-        let res = await axios.post("http://toolntool.herokuapp.com/api/mobile/conversations", {
-            _id: this.props.userInfo._id
-        })
-            .then(response => {
-                store.dispatch({
-                    type: "STORE_CONVERSATION",
-                    payload: response.data
-                })
-            })
-        console.log("conversation loaded")
-    }
-
-
-
-    logging() {
-        console.log(this.props.conversation)
-        console.log(this.props.isConversationStored)
     }
 
     checkUser() {
@@ -75,14 +62,6 @@ class InboxPage extends React.Component {
         return (
             <View>
                 <ConversationList navigation={this.props.navigation} />
-                <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                    <TouchableOpacity style={{ width: 230, height: 50, backgroundColor: "lightblue", borderColor: "grey", borderWidth: 1 }} onPress={this.getConversation.bind(this)}>
-                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
-                            <Ionicons name="ios-refresh" size={35} color="white" />
-                            <Text style={{ fontSize: 20, color: "white", marginLeft: 5, fontWeight: "bold" }}>Refresh Inbox </Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
             </View>
         )
     }

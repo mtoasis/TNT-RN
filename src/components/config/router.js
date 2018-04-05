@@ -8,7 +8,7 @@ import PostPage from '../../pages/PostPage'
 import DetailPage from '../../pages/DetailPage'
 import MessagePage from '../../pages/MessagePage'
 import Testing from '../../pages/testing'
-import { Ionicons } from '@expo/vector-icons'; // Version can be specified in package.json
+import { Ionicons } from '@expo/vector-icons';
 
 
 

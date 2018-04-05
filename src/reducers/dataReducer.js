@@ -8,6 +8,7 @@ export default function reducer(state = {
     isConversationStored:false,
     isUserPostStored:false,
     isMapView: false,
+    isSearchOn: false,
     data: [],
     userInfo:{},
     geoInfo:{},
@@ -69,6 +70,18 @@ export default function reducer(state = {
             return{
                 ...state,
                 isMapView:false,
+            }
+        }
+        case "SEARCH_ON":{
+            return{
+                ...state,
+                isSearchOn:true,
+            }
+        }
+        case "SEARCH_OFF":{
+            return{
+                ...state,
+                isSearchOn:false,
             }
         }
 

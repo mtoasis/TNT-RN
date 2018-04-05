@@ -52,7 +52,7 @@ export default class GoogleAuth extends Component {
                 type: "STORE_USER",
                 payload: response.data
               })
-              getConversation(this.state.userInfo._id)
+              getConversation(this.state.userInfo._id, true)
             })
           break;
         }

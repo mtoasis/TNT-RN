@@ -47,11 +47,9 @@ class SearchForm extends Component {
                     style={{
                         height: 50,
                         width: 250,
-                        color:"black",
                         fontSize:25,
-                        borderColor:"gray",
-                        borderRadius:20
                     }}
+                    underlineColorAndroid={'transparent'}
                 />
             </View>
         )
@@ -60,10 +58,17 @@ class SearchForm extends Component {
 
 const styles = StyleSheet.create({
     search: {
-        marginTop:20,
+        marginTop:15,
         alignItems: 'center',
-        justifyContent: 'center',        
-    }
+        justifyContent: 'center',
+        backgroundColor:"white",
+        borderRadius:20,
+        width:300,
+        height:50,
+        marginLeft:"9%",
+        borderColor:"#C5C5C5",
+        borderWidth:1            
+    },
 })
 
 export default connect(mapStateToProps)(SearchForm);
