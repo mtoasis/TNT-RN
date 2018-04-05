@@ -7,12 +7,13 @@ export default function reducer(state = {
     isGeoStored: false,
     isConversationStored:false,
     isUserPostStored:false,
+    isMapView: false,
     data: [],
     userInfo:{},
     geoInfo:{},
     conversation:[],
     userPost:[],
-    error: null,
+    error: null,    
 }, action) {
     switch (action.type) {
         case "DATA_LOADING": {            
@@ -56,6 +57,18 @@ export default function reducer(state = {
                 ...state,
                 isUserPostStored:true,
                 userPost: action.payload
+            }
+        }
+        case "MAP_VIEW":{
+            return{
+                ...state,
+                isMapView:true,
+            }
+        }
+        case "LIST_VIEW":{
+            return{
+                ...state,
+                isMapView:false,
             }
         }
 

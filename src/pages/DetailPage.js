@@ -71,7 +71,7 @@ export default class DetailPage extends React.Component {
                         </View>                        
                     </View>
                     {this.props.navigation.state.params.isSignedIn &&
-                    <Button title="Rent" onPress={this.startConv.bind(this)} />
+                    <Button title="Request Rent" onPress={this.startConv.bind(this)} />
                     }
                 </Card>
 

@@ -5,6 +5,7 @@ import axios from 'axios'
 import { storeUser } from "../../actions/dataAction"
 import store from "../../../store"
 import { Ionicons } from '@expo/vector-icons'
+import { getConversation, getUserPosts } from '../../actions/getActions'
 
 export default class GoogleAuth extends Component {
 
@@ -15,37 +16,6 @@ export default class GoogleAuth extends Component {
       isButtonPressed: false,
     }
   }
-
-  getUserPosts() {
-    axios.post("http://toolntool.herokuapp.com/api/mobile/userposts", {
-      id: this.state.userInfo._id
-    })
-      .then(response => {
-        store.dispatch({
-          type: "STORE_USERPOST",
-          payload: response.data
-        })
-        console.log("user post stored")
-      })
-  }
-
-  getConversation = async () => {
-    console.log("requesting conversation... ")
-    let res = await axios.post("http://toolntool.herokuapp.com/api/mobile/conversations", {
-      _id: this.state.userInfo._id
-    })
-      .then(response => {
-        store.dispatch({
-          type: "STORE_CONVERSATION",
-          payload: response.data
-        })
-        console.log(response.data)
-        this.getUserPosts()
-        console.log("conversation loaded")
-      })
-
-  }
-
 
   _handleGoogleLogin = async () => {
     this.setState({ isButtonPressed: true })
@@ -82,7 +52,7 @@ export default class GoogleAuth extends Component {
                 type: "STORE_USER",
                 payload: response.data
               })
-              this.getConversation()
+              getConversation(this.state.userInfo._id)
             })
           break;
         }

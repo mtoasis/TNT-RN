@@ -25,8 +25,7 @@ export default class Testing extends React.Component {
 
     render() {
         return (
-            <View>
-                
+            <View>                
 
                 <MapView
                     initialRegion={{

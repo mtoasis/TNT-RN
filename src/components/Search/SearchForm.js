@@ -58,7 +58,6 @@ class SearchForm extends Component {
 
 const styles = StyleSheet.create({
     search: {
-        marginLeft:50,
         marginTop:20,
         alignItems: 'center',
         justifyContent: 'center',        

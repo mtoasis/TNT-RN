@@ -1,12 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, Button } from 'react-native';
-import { Location, Permissions } from 'expo';
 import { connect } from "react-redux";
 import axios from 'axios'
 import GoogleAuth from '../components/GoogleAuth/auth'
 import store from '../../store'
 import { FormLabel, FormInput, List, ListItem } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
+import { getLocationAsync } from '../actions/getActions'
 
 let mapStateToProps = (store) => {
     return {
@@ -28,38 +28,9 @@ class DashBoard extends React.Component {
     }
 
     componentWillMount() {
-        this._getLocationAsync()
+        getLocationAsync()
     }
-
-    _getLocationAsync = async () => {
-        let { status } = await Permissions.askAsync(Permissions.LOCATION);
-        if (status !== 'granted') {
-            this.setState({
-                locationResult: 'Permissihjnon to access location was denied',
-            });
-        }
-        let location = await Expo.Location.getCurrentPositionAsync({});
-
-        let response = await Expo.Location.reverseGeocodeAsync({
-            latitude: Number(location.coords.latitude),
-            longitude: Number(location.coords.longitude)
-        })
-
-        let geoInfo = {
-            city: response[0].city,
-            region: response[0].region,
-            coordinate: {
-                longitude: location.coords.longitude,
-                latitude: location.coords.latitude
-            }
-        }
-        store.dispatch({
-            type: "STORE_GEO",
-            payload: geoInfo
-        })
-        console.log("geo done")
-    };
-
+ 
 
     logData() {
         console.log("redux user state")
@@ -72,16 +43,6 @@ class DashBoard extends React.Component {
         console.log(this.props.userPost)
 
 
-    }
-
-    getUserPosts() {
-        axios.post("http://toolntool.herokuapp.com/api/mobile/userposts", {
-            id: this.props.userInfo._id
-        })
-            .then(response => {
-                console.log("user post from server \n")
-                console.log(response.data)
-            })
     }
 
     render() {

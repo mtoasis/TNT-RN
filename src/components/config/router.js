@@ -11,6 +11,7 @@ import Testing from '../../pages/testing'
 import { Ionicons } from '@expo/vector-icons'; // Version can be specified in package.json
 
 
+
 const FindStack = StackNavigator({
     FindTool: { screen: FindPage },
     Detail: { screen: DetailPage}       
@@ -28,17 +29,17 @@ const InboxStack = StackNavigator({
 }
 )
 
-
 export default Tabs = TabNavigator(
-    {   
-        Testing: {screen:Testing},
+
+    {           
         DashBoard: { screen: DashBoard }, 
         PostTool: { screen: PostStack },         
         FindTool: { screen: FindStack },             
         Inbox: { screen: InboxStack },
+        // Testing: {screen:Testing},
     },
     {
-        navigationOptions: ({ navigation }) => ({
+        navigationOptions: ({ navigation }) => ({            
             tabBarIcon: ({ focused, tintColor }) => {
                 const { routeName } = navigation.state;
                 let iconName;
@@ -54,14 +55,12 @@ export default Tabs = TabNavigator(
                 else if (routeName === 'PostTool') {
                     iconName = `ios-create${focused ? '' : '-outline'}`;
                 }
-                else if (routeName === 'Testing') {
-                    iconName = `ios-lock${focused ? '' : '-outline'}`;
-                }
-
+                // else if (routeName === 'Testing') {
+                //     iconName = `ios-lock${focused ? '' : '-outline'}`;
+                // }
 
                 return <Ionicons name={iconName} size={25} color={tintColor} />;
             },
-
         }),
         tabBarComponent: TabBarBottom,
         tabBarPosition: 'bottom',

@@ -153,7 +153,7 @@ class PostPage extends React.Component {
 
           <TouchableOpacity
             onPress={this.sendPost.bind(this)}
-            style={{ alignSelf: 'center', alignItems: 'center', padding: 5, backgroundColor: 'black', height: 35, width: 200, marginBottom:50 }}>
+            style={{ alignSelf: 'center', alignItems: 'center', padding: 5, backgroundColor: 'black', height: 35, width: 200, marginBottom:25, marginTop:25 }}>
 
             <Text style={{ color: 'white', fontSize: 20 }}>Send Post</Text>
 
