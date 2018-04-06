@@ -49,7 +49,7 @@ class InboxPage extends React.Component {
                     <Text style={{ fontSize: 20, color: "white", marginBottom:40 }}>
                         Please sign in to access inbox
                     </Text>
-                    <GoogleAuth />
+                    {/* <GoogleAuth /> */}
                 </View>
             )
         }

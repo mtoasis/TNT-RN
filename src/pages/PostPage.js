@@ -214,15 +214,6 @@ class PostPage extends React.Component {
 
             </ScrollView>
 
-            <TouchableOpacity
-              onPress={this.sendPost.bind(this)}
-              style={{ alignSelf: 'center', alignItems: 'center', padding: 5, backgroundColor: 'black', height: 35, width: 200, marginBottom: 25, marginTop: 25 }}>
-
-              <Text style={{ color: 'white', fontSize: 20 }}>Send Post</Text>
-
-            </TouchableOpacity>
-
-
 
             {/* camera modal */}
             <Modal isVisible={this.state.visibleModal === 1}>
@@ -284,7 +275,7 @@ class PostPage extends React.Component {
         <Text style={{ fontSize: 20, color: "white", marginBottom:40  }}>
           Please sign in to post
     </Text>
-        <GoogleAuth />
+        {/* <GoogleAuth /> */}
       </View>
     )
   }
