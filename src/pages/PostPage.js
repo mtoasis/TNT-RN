@@ -10,6 +10,9 @@ import Modal from 'react-native-modal';
 import { Calendar } from 'react-native-calendars';
 import loader from '../resource/Img/loader.gif'
 import { Ionicons } from '@expo/vector-icons';
+import SendButton from '../components/SendButton/SendButton'
+import GoogleAuth from '../components/GoogleAuth/auth'
+import { getUserPosts } from '../actions/getActions'
 
 
 let mapStateToProps = (store) => {
@@ -23,14 +26,19 @@ let mapStateToProps = (store) => {
 
 class PostPage extends React.Component {
 
-  static navigationOptions = {
-    title: "Post Tool",
-    headerStyle: {
-      backgroundColor: 'black',
-    },
-    headerTitleStyle: {
-      color: "white"
-    },
+  static navigationOptions = ({ navigation }) => {
+    const { params = {} } = navigation.state;
+    return {
+      title: "Post Tool",
+
+      headerRight: <SendButton sendPost={params.sendPost} />,
+      headerStyle: {
+        backgroundColor: 'black',
+      },
+      headerTitleStyle: {
+        color: "white"
+      }
+    }
   }
 
   constructor() {
@@ -48,16 +56,20 @@ class PostPage extends React.Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount(){
     this.setState({ isSent: false })
     console.log(`isSent state is: ${this.state.isSent}`)
+    this.props.navigation.setParams({
+      sendPost: this.sendPost.bind(this)
+    });
   }
 
   cameraPickImage = async () => {
     let result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,
       aspect: [4, 3],
-      base64: true
+      base64: true,
+      quality: 0.7,
     })
 
     if (!result.cancelled) {
@@ -85,17 +97,22 @@ class PostPage extends React.Component {
     this.setState({ visibleModal: null })
   }
 
-  saveDate(date){    
+  saveDate(date) {
     this.setState({ markedDate: date })
   }
 
 
+
   sendPost() {
-    if (this.state.image && 
-      this.state.title !== "" && 
+    if (!this.props.isSignedIn) {
+      Alert.alert("Please Sign in")
+    }
+
+    else if (this.state.image !== null &&
+      this.state.title !== "" &&
       this.state.description !== "" &&
-      !this.state.price  &&
-      !this.state.markedDate 
+      this.state.price !== null &&
+      !this.state.markedDate !== null
     ) {
       this.setState({ visibleModal: 3 })
       console.log("sending post")
@@ -133,19 +150,24 @@ class PostPage extends React.Component {
 
         axios.post("http://toolntool.herokuapp.com/api/posts/mobile", postingData)
           .then(response => {
-            
+
             this.inputTitle.clearText()
             this.inputDesc.clearText()
             this.inputPrice.clearText()
-            this.setState({ 
+            this.setState({
               isSent: true,
-              markedDate:null,
+              markedDate: null,
               image: null,
             })
+            getUserPosts(this.props.userInfo._id)
             this.timerID = setInterval(
-              () => this.setState({ visibleModal: null }),
-              1500
+              () => {
+                this.setState({ visibleModal: null })
+                clearInterval(this.timerID);
+              },
+              1000
             );
+
 
           })
           .catch(err => console.log(err))
@@ -157,12 +179,11 @@ class PostPage extends React.Component {
   }
 
 
-
-
   render() {
     let { image } = this.state;
 
     if (this.props.isSignedIn) {
+
       return (
         <View style={styles.container}>
           <KeyboardAvoidingView behavior="padding" style={styles.form}>
@@ -171,24 +192,25 @@ class PostPage extends React.Component {
                 <Image source={image ? { uri: image } : noImage} style={{ width: 400, height: 300 }} />
               </TouchableHighlight>
 
-              <FormLabel>Title</FormLabel>
+              <FormLabel labelStyle={styles.formLable}>Title</FormLabel>
               <FormInput maxLength={20} placeholder="Post Title (Max Character: 20)" onChangeText={(title) => { this.setState({ title }) }} ref={inputTitle => this.inputTitle = inputTitle} />
               {this.state.title ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
 
-              <FormLabel>Price</FormLabel>
+              <FormLabel labelStyle={styles.formLable}>Price</FormLabel>
               <FormInput keyboardType='numeric' placeholder="Price (USD/day)" onChangeText={(price) => { this.setState({ price }) }} ref={inputPrice => this.inputPrice = inputPrice} />
               {this.state.price ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
 
-              <FormLabel>Location</FormLabel>
-              <Text style={styles.text}>{this.props.geoInfo.city}, {this.props.geoInfo.region}</Text>
+              <FormLabel labelStyle={styles.formLable}>Available Date</FormLabel>
+              <TouchableOpacity onPress={() => this.setState({ visibleModal: 2 })}>
+                <Text style={styles.text}>{this.state.markedDate ? this.state.markedDate : `Click to set the date`}</Text>
+              </TouchableOpacity>
 
-              <FormLabel>Available Date</FormLabel>
-              <Text onPress={() => this.setState({ visibleModal: 2 })} style={styles.text}>{this.state.markedDate ? this.state.markedDate : `Click to set date`}</Text>
-
-              <FormLabel>description</FormLabel>
-              <FormInput placeholder="Post Description" onChangeText={(description) => { this.setState({ description }) }} ref={inputDesc => this.inputDesc = inputDesc} />
+              <FormLabel labelStyle={styles.formLable}>Description</FormLabel>
+              <FormInput placeholder="Post Description" multiline onChangeText={(description) => { this.setState({ description }) }} ref={inputDesc => this.inputDesc = inputDesc} />
               {this.state.description ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
 
+              <FormLabel labelStyle={styles.formLable}>Location</FormLabel>
+              <Text style={styles.text}>{this.props.geoInfo.city}, {this.props.geoInfo.region}</Text>
 
             </ScrollView>
 
@@ -252,17 +274,17 @@ class PostPage extends React.Component {
                 {this.state.isSent ? <Ionicons name="md-checkmark" size={35} color="black" /> : <Image source={loader} style={{ width: 50, height: 50 }} />}
               </View>
             </Modal>
-
-
           </KeyboardAvoidingView>
         </View>
       )
     }
+
     return (
-      <View style={styles.container}>
-        <Text>
+      <View style={styles.containerBlack}>
+        <Text style={{ fontSize: 20, color: "white", marginBottom:40  }}>
           Please sign in to post
     </Text>
+        <GoogleAuth />
       </View>
     )
   }
@@ -276,6 +298,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'white'
   },
+  containerBlack: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black'
+  },
   button: {
     width: 250,
     height: 50,
@@ -284,7 +313,8 @@ const styles = StyleSheet.create({
     marginBottom: 30
   },
   text: {
-    marginLeft: 40
+    marginLeft: 40,
+    fontSize: 17
   },
   modalContent: {
     backgroundColor: 'white',
@@ -305,11 +335,15 @@ const styles = StyleSheet.create({
   },
   calenderText: {
     fontSize: 20,
-    marginTop: 20
+    marginTop: 20,
+    color: "#0080D1"
   },
   form: {
     flex: 1,
     justifyContent: 'space-between',
+  },
+  formLable: {
+    fontSize: 17
   },
   modalText: {
     color: "white"

@@ -50,7 +50,6 @@ export const getConversation = async (user_id, extension) => {
         type: "STORE_CONVERSATION",
         payload: response.data
       })
-      // console.log(response.data)
       if (extension) {
         getUserPosts(user_id)
       }

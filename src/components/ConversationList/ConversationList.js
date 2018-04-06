@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { Text, View, StyleSheet, TextInput, Image, ScrollView, Button, TouchableOpacity } from "react-native";
+import { Text, View, StyleSheet, TextInput, Image, ScrollView, Button, TouchableOpacity,RefreshControl } from "react-native";
 import { List, ListItem } from 'react-native-elements'
 import { StackNavigator } from 'react-navigation';
-import { Ionicons } from '@expo/vector-icons'; // Version can be specified in package.json
+import { Ionicons } from '@expo/vector-icons'; 
+import {getConversation} from '../../actions/getActions'
+
 
 let mapStateToProps = (store) => {
     return {
@@ -18,9 +20,17 @@ class ConversationList extends Component {
 
     constructor(props) {
         super(props)
+        this.state={
+            refreshing: false,
+        }
     }
 
-
+    _onRefresh() {
+        console.log("refreshing")
+        this.setState({ refreshing: true })
+        getConversation(this.props.userInfo._id,false)          
+        this.setState({ refreshing: false })        
+    }
 
     render() {
 
@@ -28,7 +38,12 @@ class ConversationList extends Component {
 
         return (
 
-            <ScrollView>
+            <ScrollView
+            refreshControl={<RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={this._onRefresh.bind(this)}
+            />}
+            >            
                 <List>
                     {
                         list.map((conversation, key) => {

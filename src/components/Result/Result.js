@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { Text, View, StyleSheet, TextInput, Image, ScrollView, Button } from "react-native";
+import { Text, View, StyleSheet, TextInput, Image, ScrollView, Button, RefreshControl } from "react-native";
 import { Card, ListItem } from 'react-native-elements'
 import { fetchAll, fetchDataSelected } from '../../actions/dataAction'
 import { StackNavigator } from 'react-navigation';
@@ -26,11 +26,21 @@ class Result extends Component {
         super(props)
         this.state = {
             selected: {},
+            refreshing: false,
         }
     }
 
     componentWillMount() {
+        if (this.props.data.length === 0) {
+            this.props.dispatch(fetchAll())
+        }
+    }
+
+    _onRefresh() {
+        console.log("refreshing")
+        this.setState({ refreshing: true })
         this.props.dispatch(fetchAll())
+        this.setState({ refreshing: false })
     }
 
     render() {
@@ -93,19 +103,23 @@ class Result extends Component {
             )
         }
         return (
-            <ScrollView>
+            <ScrollView
+                refreshControl={<RefreshControl
+                    refreshing={this.state.refreshing}
+                    onRefresh={this._onRefresh.bind(this)}
+                />}>
                 {data.map((post, key) => (
 
                     <View key={key}>
                         <Card
                             title={post.title}
-                            titleStyle={styles.title}   
+                            titleStyle={styles.title}
                         >
-                            <View style={{ flexDirection: 'row', marginBottom: 15}}>
+                            <View style={{ flexDirection: 'row', marginBottom: 15 }}>
                                 <Image source={{ uri: `${post.img}` }}
                                     style={{
-                                        width: 200,
-                                        height: 200,
+                                        width: 150,
+                                        height: 150,
                                         marginRight: 30
                                     }} />
                                 <View>
@@ -113,10 +127,10 @@ class Result extends Component {
                                         marginBottom: 10,
                                         fontWeight: "bold"
                                     }}>
-                                        Description:
+                                        Price:
                                         </Text>
                                     <Text style={{ marginBottom: 10 }}>
-                                        {post.description}
+                                        $ {post.price} /day
                                     </Text>
                                     <Text style={{
                                         marginBottom: 10,
@@ -127,6 +141,17 @@ class Result extends Component {
                                     <Text style={{ marginBottom: 10 }}>
                                         {post.location}
                                     </Text>
+                                    <Text style={{
+                                        marginBottom: 10,
+                                        fontWeight: "bold"
+                                    }}>
+                                        Available Date:
+                                        </Text>
+                                    <Text style={{ marginBottom: 10 }}>
+                                        {post.availableDate}
+                                    </Text>
+
+
                                 </View>
                             </View>
 
@@ -160,9 +185,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white'
     },
-    title:{
-        fontSize:20,
-        fontWeight:"bold"
+    title: {
+        fontSize: 20,
+        fontWeight: "bold"
     }
 
 });

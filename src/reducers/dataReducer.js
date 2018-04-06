@@ -1,8 +1,6 @@
 
 
 export default function reducer(state = {
-    fetching: false,
-    fetched: false,
     isSignedIn: false,
     isGeoStored: false,
     isConversationStored:false,
@@ -20,23 +18,25 @@ export default function reducer(state = {
         case "DATA_LOADING": {            
             return {
                 ...state,
-                fetching: false,
-                fetched: true,
                 data: action.payload
             }
-        }
-        case "DATA_SELECTED": {            
-            return {
-                ...state,
-                data: action.payload
-            }
-        }
-        
+        }        
         case "STORE_USER":{
             return{
                 ...state,
                 isSignedIn:true,
                 userInfo: action.payload
+            }
+        }
+        case "SIGN_OUT":{
+            return{
+                ...state,
+                isSignedIn:false,
+                isUserPostStored: false,
+                isConversationStored: false,
+                userInfo: {},
+                userPost: [],
+                conversation: [],
             }
         }
         case "STORE_GEO":{
@@ -83,8 +83,7 @@ export default function reducer(state = {
                 ...state,
                 isSearchOn:false,
             }
-        }
-
+        }        
         default: {
             return state
         }

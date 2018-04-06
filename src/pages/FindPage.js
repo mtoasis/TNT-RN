@@ -22,9 +22,17 @@ class FindPage extends React.Component {
         },
     };
 
+    constructor(){
+        super()
+        this.state={
+            one:true,
+        }
+    }
+
     render() {
         return (
             <View style={styles.container}>
+
                {this.props.isSearchOn && <SearchForm />} 
                 <Result navigation={this.props.navigation} />
             </View>

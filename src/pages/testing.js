@@ -6,8 +6,22 @@ import { Ionicons } from '@expo/vector-icons'; // Version can be specified in pa
 import noImage from '../resource/Img/noImage.png'
 import Modal from 'react-native-modal';
 import MapView, { Marker } from 'react-native-maps';
+import { connect } from "react-redux";
+import store from '../../store'
 
-export default class Testing extends React.Component {
+let mapStateToProps = (store) => {
+    return {
+        userInfo: store.data.userInfo,
+        geoInfo: store.data.geoInfo,
+        isSignedIn: store.data.isSignedIn,
+        isSentDone: store.data.isSentDone,
+    }
+}
+
+
+
+
+class Testing extends React.Component {
 
     constructor() {
         super()
@@ -18,54 +32,26 @@ export default class Testing extends React.Component {
     }
 
     componentDidMount() {
-
     }
-
 
 
     render() {
         return (
-            <View>                
+            <View style={styles.container} >
+                <View style={{ flexDirection: "row", marginBottom: 10 }}>
+                    <Text style={styles.titleText}>Tool </Text>
+                    <Text style={styles.middleTitleText}>N</Text>
+                    <Text style={styles.titleText}> Tool</Text>
+                </View>
+                <View style={{ marginBottom: 30 }}>
+                    <Text style={styles.smallTitleText}>The Ultimate Tool Sharing Marketplace</Text>
+                </View>
+                <Ionicons name="ios-construct-outline" size={150} color="white" />
+                <View style={{ marginBottom: 30 }}>
+                    <Text style={{ fontSize: 20, color: "white" }}>Welcome Julian!</Text>
+                </View>
 
-                <MapView
-                    initialRegion={{
-                        latitude: 37.78825,
-                        longitude: -122.4324,
-                        latitudeDelta: 0.0922,
-                        longitudeDelta: 0.0421,
-                    }}
-
-                    style={{
-                        width: 400,
-                        height: 400,
-                    }}
-                >
-                    <Marker
-                        coordinate={{
-                            latitude: 37.75,
-                            longitude: -122.45
-                        }}
-                        title="testing"
-                        description="desc testing"
-
-                        onCalloutPress={() => console.log("hello")}
-                    />
-
-                    <Marker
-                        coordinate={{
-                            latitude: 37.80,
-                            longitude: -122.45
-                        }}
-                        title="testing"
-                        description="desc testing"
-                        onCalloutPress={() => console.log("hello")}
-                    />
-
-                </MapView>
-
-            </View>
-
-
+            </ View>
         )
     }
 }
@@ -74,39 +60,26 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-
         justifyContent: 'center',
         alignItems: 'center',
-        // backgroundColor: 'white'
+        backgroundColor: "black"
     },
-    text: {
-        fontSize: 20,
-        color: "#FF5858",
-        marginLeft: 15,
-        // alignItems: 'center',        
+    titleText: {
+        fontSize: 45,
+        color: "white",
+        fontWeight: "bold",
+        marginTop: 15
     },
-    boxContainer: {
-        width: "95%",
-        height: 250,
-        backgroundColor: "white",
-        borderColor: "black",
-        borderWidth: 1,
-        // paddingVertical: 20,
-        padding: 20,
-        overflow: 'scroll'
+    middleTitleText: {
+        fontSize: 50,
+        color: "white",
+        fontWeight: "bold",
     },
-    smallContainer: {
-        width: "90%",
-        height: 55,
-        backgroundColor: "#F6F6F6",
-        borderColor: "#B4B4B4",
-        borderWidth: 1,
-        borderRadius: 20,
-        flexDirection: 'row',
-        // justifyContent: 'center',
-        // alignItems:'center',
-        marginBottom: 15,
+    smallTitleText: {
+        fontSize: 15,
+        color: "white",
     },
-
 
 })
+
+export default connect(mapStateToProps)(Testing)

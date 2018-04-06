@@ -6,8 +6,7 @@ import store from '../../store'
 import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
 import ConversationList from '../components/ConversationList/ConversationList'
 import { Ionicons } from '@expo/vector-icons';
-import RefreshButton from '../components/RefreshButton/RefreshButton'
-
+import GoogleAuth from '../components/GoogleAuth/auth'
 
 let mapStateToProps = (store) => {
     return {
@@ -28,7 +27,6 @@ class InboxPage extends React.Component {
         headerStyle: {
             backgroundColor: 'black',
         },
-        headerRight:<RefreshButton />,
         headerTitleStyle: {
             color: "white"
         },
@@ -41,21 +39,17 @@ class InboxPage extends React.Component {
         }
     }
 
-    checkUser() {
-        if (this.props.userInfo._id === this.props.conversation[0].users[0]._id) {
-            console.log(this.props.conversation[0].users[1].name)
-        }
-        else {
-            console.log(this.props.conversation[0].users[0].name)
-        }
-    }
 
     render() {
 
         if (!this.props.isSignedIn) {
             return (
-                <View style={styles.container}>
-                    <Text>Please sign in to access inbox</Text>
+
+                <View style={styles.containerBlack}>
+                    <Text style={{ fontSize: 20, color: "white", marginBottom:40 }}>
+                        Please sign in to access inbox
+                    </Text>
+                    <GoogleAuth />
                 </View>
             )
         }
@@ -77,6 +71,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'white'
     },
+    containerBlack: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black'
+      },
     button: {
         width: 250,
         height: 50,

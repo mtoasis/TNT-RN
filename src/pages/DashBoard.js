@@ -8,52 +8,50 @@ import { FormLabel, FormInput, List, ListItem } from 'react-native-elements'
 import { Ionicons } from '@expo/vector-icons';
 import { getLocationAsync } from '../actions/getActions'
 import loader from '../resource/Img/loader.gif'
+import SignOutButton from '../components/SignOutButton/SignOutButton'
+
 
 let mapStateToProps = (store) => {
     return {
         userInfo: store.data.userInfo,
         geoInfo: store.data.geoInfo,
+        userPost: store.data.userPost,
         isSignedIn: store.data.isSignedIn,
         isGeoStored: store.data.isGeoStored,
-        conversation: store.data.conversation,
         isConversationStored: store.data.isConversationStored,
-        userPost: store.data.userPost,
         isUserPostStored: store.data.isUserPostStored,
+        conversation: store.data.conversation,
     }
 }
 
 class DashBoard extends React.Component {
+
+    static navigationOptions = ({ navigation }) => {
+        const { params = {} } = navigation.state;
+        return {
+            headerRight: <SignOutButton />,
+            headerStyle: {
+                backgroundColor: 'black',
+            },
+        }
+    }
 
     constructor() {
         super()
     }
 
     componentWillMount() {
-        getLocationAsync()
-    }
-
-
-    logData() {
-        console.log("redux user state")
-        console.log(this.props.userInfo)
-        console.log("redux geo state")
-        console.log(this.props.geoInfo)
-        console.log("redux conversation state")
-        console.log(this.props.conversation)
-        console.log("redux userPost state")
-        console.log(this.props.userPost)
-
-
+        getLocationAsync()    
     }
 
     render() {
         if (!this.props.isGeoStored) {
             return (
                 <View style={styles.container}>
-                    <Text>
-                        Initialize App,
+                    <Text style={styles.smallTitleText}>
+                        Initialize App....
                     </Text>
-                    <Text>
+                    <Text style={styles.smallTitleText}>
                         Please Press "YES" on location permission
                     </Text>
                     <Image source={loader} style={{ width: 50, height: 50 }} />
@@ -62,35 +60,52 @@ class DashBoard extends React.Component {
         }
         else if (this.props.isGeoStored && !this.props.isSignedIn) {
             return (
-                <View style={styles.container}>
+                <View style={styles.container} >
+                    <View style={{ flexDirection: "row", marginBottom: 10 }}>
+                        <Text style={styles.titleText}>Tool </Text>
+                        <Text style={styles.middleTitleText}>N</Text>
+                        <Text style={styles.titleText}> Tool</Text>
+                    </View>
+                    <View style={{ marginBottom: 30 }}>
+                        <Text style={styles.smallTitleText}>The Ultimate Tool Sharing Marketplace</Text>
+                    </View>
+                    <Ionicons name="ios-construct-outline" size={150} color="white" />
+                    <View style={{ marginBottom: 30 }}>
+                        <Text style={{ fontSize: 20, color: "white" }}>Please Sign-in to Start</Text>
+                    </View>
                     <GoogleAuth />
-                </View >
+                </ View>
             )
         }
         else if (this.props.isGeoStored && this.props.isSignedIn && !this.props.isConversationStored && !this.props.isUserPostStored) {
             return (
                 <View style={styles.container}>
-                    <Text>
+                    <Text style={styles.smallTitleText}>
                         Loading user data...
                     </Text>
                     <Image source={loader} style={{ width: 50, height: 50 }} />
-                    <Text>
-                        {this.isConversationStored ? `User conversation loaded` : ``}
-                    </Text>
-                    <Text>
-                        {this.isUserPostStored ? `User post loaded` : ``}
-                    </Text>
-
-
                 </View>
             )
         }
         return (
-            <View style={styles.container}>
+            <View style={styles.container} >
+                <View style={{ flexDirection: "row", marginBottom: 10 }}>
+                    <Text style={styles.titleText}>Tool </Text>
+                    <Text style={styles.middleTitleText}>N</Text>
+                    <Text style={styles.titleText}> Tool</Text>
+                </View>
+                <View style={{ marginBottom: 30 }}>
+                    <Text style={styles.smallTitleText}>The Ultimate Tool Sharing Marketplace</Text>
+                </View>
+                <Ionicons name="ios-construct-outline" size={150} color="white" />
+                <View style={{ marginBottom: 30, justifyContent: 'center', alignItems: 'center' }}>
+                    <Text style={{ fontSize: 20, color: "white" }}>Welcome! {this.props.userInfo.name.givenName}</Text>
+                </View>
+                <Text style={{ fontSize: 20, color: "white" }}>You have {this.props.conversation.length} conversations</Text>
+                <Text style={{ fontSize: 20, color: "white" }}>and {this.props.userPost.length} posts</Text>
 
-                <Text>Welcome! {this.props.userInfo.name.givenName}</Text>
+            </ View>
 
-            </View>
         )
     }
 }
@@ -102,19 +117,22 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'white'
+        backgroundColor: "black"
     },
-    button: {
-        width: 250,
-        height: 50,
-        backgroundColor: "black",
-        borderRadius: 30,
-        justifyContent: 'center'
+    titleText: {
+        fontSize: 45,
+        color: "white",
+        fontWeight: "bold",
+        marginTop: 15
     },
-    text: {
-        color: 'white',
-        fontSize: 30,
-        textAlign: 'center'
+    middleTitleText: {
+        fontSize: 50,
+        color: "white",
+        fontWeight: "bold",
+    },
+    smallTitleText: {
+        fontSize: 15,
+        color: "white",
     },
 });
 

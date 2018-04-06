@@ -29,14 +29,20 @@ const InboxStack = StackNavigator({
 }
 )
 
+const DashStack = StackNavigator({
+    DashBoard: { screen: DashBoard },
+}
+)
+
 export default Tabs = TabNavigator(
 
-    {           
-        DashBoard: { screen: DashBoard }, 
+    {     
+        // Testing: {screen:Testing},      
+        DashBoard: { screen: DashStack }, 
         PostTool: { screen: PostStack },         
         FindTool: { screen: FindStack },             
         Inbox: { screen: InboxStack },
-        // Testing: {screen:Testing},
+        
     },
     {
         navigationOptions: ({ navigation }) => ({            
@@ -65,7 +71,7 @@ export default Tabs = TabNavigator(
         tabBarComponent: TabBarBottom,
         tabBarPosition: 'bottom',
         tabBarOptions: {
-            activeTintColor: 'tomato',
+            activeTintColor: 'black',
             inactiveTintColor: 'gray',
         },
         animationEnabled: false,

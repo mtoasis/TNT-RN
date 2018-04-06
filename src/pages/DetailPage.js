@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image, Alert } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, Alert, ScrollView } from 'react-native';
 import { Card, ListItem } from 'react-native-elements'
 import axios from 'axios'
 
@@ -28,7 +28,7 @@ export default class DetailPage extends React.Component {
             console.log(response.data)
             if (response.data.length !== undefined) {
 
-                Alert.alert("You can't start conversation to your own post")
+                Alert.alert("You can't start a conversation to your own post")
             }
             else {
                 this.props.navigation.navigate('Message', {
@@ -36,7 +36,6 @@ export default class DetailPage extends React.Component {
                     userInfo: params.userInfo
                 })
             }
-
 
         })
     }
@@ -48,9 +47,10 @@ export default class DetailPage extends React.Component {
 
 
         return (
-            <View style={styles.container}>
-
+            // <View style={styles.container}>
+            <ScrollView>
                 <Card
+                    containerStyle={{marginBottom:20}} 
                     title={post.title}
                     titleStyle={styles.title}
                 >
@@ -62,27 +62,45 @@ export default class DetailPage extends React.Component {
                                 marginRight: 30
                             }} />
                         <View>
+                            <View style={styles.inlineText}>
                             <Text style={styles.cardTextBold}>
-                                Description:
-                            </Text>
+                                {`Price: `} 
+                                        </Text>
                             <Text style={styles.cardText}>
-                                {post.description}
+                                $ {post.price} /day
                             </Text>
+                            </View>
+                            <View style={styles.inlineText}>
                             <Text style={styles.cardTextBold}>
-                                Location:
+                                {`Location: `}
                                         </Text>
                             <Text style={styles.cardText}>
                                 {post.location}
+                            </Text>
+                            </View>
+                            <View style={styles.inlineText}>
+                            <Text style={styles.cardTextBold}>
+                                {`Available Date: `}
+                                        </Text>
+                            <Text style={styles.cardText}>
+                                {post.availableDate}
+                            </Text>
+                            </View>
+                            <Text style={styles.cardTextBold}>
+                                Description: 
+                            </Text>
+                            <Text style={styles.cardText}>
+                                {post.description}
                             </Text>
 
                         </View>
                     </View>
                     {this.props.navigation.state.params.isSignedIn &&
-                        <Button title="Request Rent" onPress={this.startConv.bind(this)} />
+                        <Button title="Request Rent" color="black" onPress={this.startConv.bind(this)} />
                     }
                 </Card>
-
-            </View>
+            </ScrollView>
+            /* </View> */ 
         )
     }
 }
@@ -92,17 +110,21 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     cardTextBold: {
-        marginBottom: 10,
         fontWeight: "bold",
-        fontSize: 25
+        fontSize: 20,
+        color:"#205AA1"
     },
     cardText: {
-        marginBottom: 10,
-        fontSize: 20
+        marginTop:3,
+        fontSize: 17,
     },
     title: {
         fontSize: 30,
         fontWeight: "bold"
+    },
+    inlineText:{
+        flexDirection:"row",
+        marginBottom:10
     }
 
 });

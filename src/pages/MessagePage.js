@@ -70,10 +70,6 @@ export default class MessagePage extends React.Component {
         })
     }
 
-    logging() {
-        // console.log(this.state.message.messages)        
-    }
-
     render() {
 
         if (!this.state.isMessageMount) {
@@ -87,8 +83,8 @@ export default class MessagePage extends React.Component {
         const msg = this.state.message.messages
         const params = this.props.navigation.state.params
         return (
-            <View style={styles.container}>
-                <KeyboardAvoidingView behavior="padding" style={styles.form}>
+            // <View style={styles.container}>
+            <KeyboardAvoidingView behavior="padding" style={styles.container}>
 
                     <ScrollView style={{ height: "80%", width: "100%", borderColor: "white" }} ref={(scrollView) => { this.scrollView = scrollView }}>
                         {
@@ -149,7 +145,7 @@ export default class MessagePage extends React.Component {
                     </View>
                 </KeyboardAvoidingView>
 
-            </View>
+            // </View>
         )
     }
 }

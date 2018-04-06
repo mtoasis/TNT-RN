@@ -23,16 +23,13 @@ class SearchForm extends Component {
 
 
     conditionalFetch() {
-        //for findAll case
         if (this.state.term === "") {
             this.props.dispatch(fetchAll())
         }
-        //for findByTitle case
         else {
             this.props.dispatch(fetchData(this.state.term))
         }
     }
-
 
     render() {
         return (
@@ -44,11 +41,7 @@ class SearchForm extends Component {
                     value={this.state.term}
                     placeholder='Type Search'
                     textAlign ="center"
-                    style={{
-                        height: 50,
-                        width: 250,
-                        fontSize:25,
-                    }}
+                    style={styles.textInput}
                     underlineColorAndroid={'transparent'}
                 />
             </View>
@@ -69,6 +62,12 @@ const styles = StyleSheet.create({
         borderColor:"#C5C5C5",
         borderWidth:1            
     },
+    textInput:{
+        height: 50,
+        width: 250,
+        fontSize:25,
+    } 
+
 })
 
 export default connect(mapStateToProps)(SearchForm);
