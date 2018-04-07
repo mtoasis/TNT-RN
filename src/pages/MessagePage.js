@@ -99,8 +99,8 @@ export default class MessagePage extends React.Component {
                                             styles.nameRight : styles.nameLeft}>
 
                                             {message.sender._id === params.userInfo._id ?
-                                                `${params.conversation.users[1].name.givenName} ${params.conversation.users[1].name.familyName}`
-                                                : `${message.sender.name.givenName} ${message.sender.name.familyName}`}
+                                                       `${params.userInfo.name.givenName} ${params.userInfo.name.familyName}`
+                                                       : `${message.sender.name.givenName} ${message.sender.name.familyName}`}
                                         </Text>
 
                                         <Text style={message.sender._id === params.userInfo._id ?
@@ -162,7 +162,8 @@ const styles = StyleSheet.create({
         minHeight: 50,
         borderColor: "black",
         borderWidth: 0.5,
-        padding: 10
+        padding: 10,
+        overflow: "hidden"
     },
     msgRight: {
         backgroundColor: "#FFF6D8",
@@ -171,7 +172,8 @@ const styles = StyleSheet.create({
         minHeight: 50,
         borderColor: "black",
         borderWidth: 0.5,
-        padding: 10
+        padding: 10,
+        overflow: "hidden"
     },
     nameRight: {
         fontSize: 13,

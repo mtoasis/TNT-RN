@@ -26,6 +26,7 @@ class InboxPage extends React.Component {
         title: "Inbox",
         headerStyle: {
             backgroundColor: 'black',
+            borderBottomWidth: 0,
         },
         headerTitleStyle: {
             color: "white"

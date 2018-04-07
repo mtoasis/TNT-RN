@@ -19,6 +19,7 @@ class FindPage extends React.Component {
         headerTitle: <MapButton />,
         headerStyle: {
             backgroundColor: 'black',
+            borderBottomWidth: 0,
         },
     };
 

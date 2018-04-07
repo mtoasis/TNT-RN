@@ -88,7 +88,7 @@ export default class GoogleAuth extends Component {
         <TouchableOpacity style={{ width: 230, height: 50, backgroundColor: "tomato", borderColor: "#800000", borderWidth: 1 }} onPress={this._handleGoogleLogin}>
           <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
             <Ionicons name="logo-google" size={35} color="white" />
-            <Text style={{ fontSize: 20, color: "white", marginLeft: 5, fontWeight: "bold" }}>Login Using Google </Text>
+            <Text style={{ fontSize: 16, color: "white", marginLeft: 5, fontWeight: "bold" }}>Login Using Google </Text>
           </View>
         </TouchableOpacity>
       )

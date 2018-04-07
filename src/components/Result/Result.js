@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
-import { Text, View, StyleSheet, TextInput, Image, ScrollView, Button, RefreshControl } from "react-native";
+import { Text, View, StyleSheet, TextInput, Image, ScrollView, Button, RefreshControl, TouchableOpacity } from "react-native";
 import { Card, ListItem } from 'react-native-elements'
 import { fetchAll, fetchDataSelected } from '../../actions/dataAction'
 import { StackNavigator } from 'react-navigation';
@@ -155,16 +155,18 @@ class Result extends Component {
                                 </View>
                             </View>
 
-                            <Button
-                                color='black'
-                                title='See Detail'
+                            <TouchableOpacity style={{ width: 200, height: 45, backgroundColor: "black", alignSelf:'center' }}
                                 onPress={() => this.props.navigation.navigate('Detail', {
                                     postInfo: post,
                                     userInfo: this.props.userInfo,
                                     isSignedIn: this.props.isSignedIn
                                 })
-                                }
-                            />
+                                }>
+                                <View style={{alignItems: 'center', marginTop:9 }}>
+                                    <Text style={{ fontSize: 17, color: "white", marginLeft: 5, fontWeight: "bold" }}>See Detail</Text>
+                                </View>
+                            </TouchableOpacity>
+
                         </Card>
 
                     </View>

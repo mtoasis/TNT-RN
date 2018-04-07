@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Image, Alert, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Button, Image, Alert, ScrollView, TouchableOpacity } from 'react-native';
 import { Card, ListItem } from 'react-native-elements'
 import axios from 'axios'
+import { Ionicons } from '@expo/vector-icons';
 
 export default class DetailPage extends React.Component {
 
@@ -11,6 +12,7 @@ export default class DetailPage extends React.Component {
             title: params ? params.postInfo.title : 'A Nested Details Screen',
             headerStyle: {
                 backgroundColor: 'black',
+                shadowColor: 'transparent'
             },
             headerTitleStyle: {
                 color: "white"
@@ -96,7 +98,15 @@ export default class DetailPage extends React.Component {
                         </View>
                     </View>
                     {this.props.navigation.state.params.isSignedIn &&
-                        <Button title="Request Rent" color="black" onPress={this.startConv.bind(this)} />
+                        <TouchableOpacity style={{ width: 200, height: 45, backgroundColor: "black", alignSelf:'center' }}
+                        onPress={this.startConv.bind(this)}>
+                        <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                            <Ionicons name="ios-cart-outline" size={35} color="white" />
+                            <Text style={{ fontSize: 17, color: "white", marginLeft: 10, fontWeight: "bold" }}>Request Rent</Text>
+                        </View>
+                    </TouchableOpacity>
+
+
                     }
                 </Card>
             </ScrollView>

@@ -1,13 +1,11 @@
 import React from 'react';
 import { TabNavigator, TabBarBottom, StackNavigator } from 'react-navigation';
-import StartPage from '../../pages/StartPage'
 import DashBoard from '../../pages/DashBoard'
 import FindPage from '../../pages/FindPage'
 import InboxPage from '../../pages/InboxPage'
 import PostPage from '../../pages/PostPage'
 import DetailPage from '../../pages/DetailPage'
 import MessagePage from '../../pages/MessagePage'
-import Testing from '../../pages/testing'
 import { Ionicons } from '@expo/vector-icons';
 
 
@@ -37,7 +35,6 @@ const DashStack = StackNavigator({
 export default Tabs = TabNavigator(
 
     {     
-        // Testing: {screen:Testing},      
         DashBoard: { screen: DashStack }, 
         PostTool: { screen: PostStack },         
         FindTool: { screen: FindStack },             
@@ -61,9 +58,7 @@ export default Tabs = TabNavigator(
                 else if (routeName === 'PostTool') {
                     iconName = `ios-create${focused ? '' : '-outline'}`;
                 }
-                // else if (routeName === 'Testing') {
-                //     iconName = `ios-lock${focused ? '' : '-outline'}`;
-                // }
+
 
                 return <Ionicons name={iconName} size={25} color={tintColor} />;
             },

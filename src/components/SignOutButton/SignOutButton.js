@@ -22,7 +22,7 @@ class SignOutButton extends React.Component {
         return (
             <View style={{ flexDirection: 'row', marginLeft: 50 }}>
             {this.props.isSignedIn?
-                <TouchableOpacity style={{ marginRight: 10, width: 125, height: 50, }} onPress={()=>{
+                <TouchableOpacity style={{ marginRight: 10, width: 125, height: 42, }} onPress={()=>{
                      store.dispatch({
                         type: "SIGN_OUT",
                     })

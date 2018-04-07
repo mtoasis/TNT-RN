@@ -32,6 +32,7 @@ class DashBoard extends React.Component {
             headerRight: <SignOutButton />,
             headerStyle: {
                 backgroundColor: 'black',
+                borderBottomWidth: 0,
             },
         }
     }

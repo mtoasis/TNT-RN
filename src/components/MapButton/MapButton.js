@@ -51,20 +51,20 @@ class MapButton extends React.Component {
     render() {
         return (
             <View style={{ flexDirection: 'row', marginLeft: 30 }}>
-                <TouchableOpacity style={{ marginRight: 10, width: 125, height: 50, }} onPress={this.ListView.bind(this)}>
+                <TouchableOpacity style={{ marginRight: 10, width: 125, height: 42, }} onPress={this.ListView.bind(this)}>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
                         <Ionicons name="ios-list" size={35} color="white" />
                         <Text style={{ fontSize: 17, color: "white", marginLeft: 5, fontWeight: "bold" }}>List View </Text>
                     </View>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{ width: 125, height: 50, backgroundColor: "black" }} onPress={this.MapView.bind(this)}>
+                <TouchableOpacity style={{ width: 125, height: 42, backgroundColor: "black" }} onPress={this.MapView.bind(this)}>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
                         <Ionicons name="ios-map-outline" size={35} color="white" />
                         <Text style={{ fontSize: 17, color: "white", marginLeft: 5, fontWeight: "bold" }}>Map View </Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ width: 50, height: 50, backgroundColor: "black", marginLeft:10}} onPress={this.searchOn.bind(this)}>
+                <TouchableOpacity style={{ width: 50, height: 42, backgroundColor: "black", marginLeft:10}} onPress={this.searchOn.bind(this)}>
                     <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
                         <Ionicons name="ios-search-outline" size={35} color="white" />
                     </View>

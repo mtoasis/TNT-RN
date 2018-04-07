@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, Alert, TouchableHighlight, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
+import { Keyboard, StyleSheet, Text, View, ScrollView, Image, Alert, TouchableHighlight, TouchableOpacity, KeyboardAvoidingView } from 'react-native';
 import { FormLabel, FormInput, FormValidationMessage, Button } from 'react-native-elements'
 import { Constants, ImagePicker } from 'expo';
 import { postData } from '../actions/dataAction'
@@ -34,6 +34,7 @@ class PostPage extends React.Component {
       headerRight: <SendButton sendPost={params.sendPost} />,
       headerStyle: {
         backgroundColor: 'black',
+        borderBottomWidth: 0,
       },
       headerTitleStyle: {
         color: "white"
@@ -193,11 +194,11 @@ class PostPage extends React.Component {
               </TouchableHighlight>
 
               <FormLabel labelStyle={styles.formLable}>Title</FormLabel>
-              <FormInput maxLength={20} placeholder="Post Title (Max Character: 20)" onChangeText={(title) => { this.setState({ title }) }} ref={inputTitle => this.inputTitle = inputTitle} />
+              <FormInput onSubmitEditing={Keyboard.dismiss} maxLength={20} placeholder="Post Title (Max Character: 20)" onChangeText={(title) => { this.setState({ title }) }} ref={inputTitle => this.inputTitle = inputTitle} />
               {this.state.title ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
 
               <FormLabel labelStyle={styles.formLable}>Price</FormLabel>
-              <FormInput keyboardType='numeric' placeholder="Price (USD/day)" onChangeText={(price) => { this.setState({ price }) }} ref={inputPrice => this.inputPrice = inputPrice} />
+              <FormInput returnKeyType='done' onSubmitEditing={Keyboard.dismiss} keyboardType='numeric' placeholder="Price (USD/day)" onChangeText={(price) => { this.setState({ price }) }} ref={inputPrice => this.inputPrice = inputPrice} />
               {this.state.price ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
 
               <FormLabel labelStyle={styles.formLable}>Available Date</FormLabel>
@@ -206,7 +207,7 @@ class PostPage extends React.Component {
               </TouchableOpacity>
 
               <FormLabel labelStyle={styles.formLable}>Description</FormLabel>
-              <FormInput placeholder="Post Description" multiline onChangeText={(description) => { this.setState({ description }) }} ref={inputDesc => this.inputDesc = inputDesc} />
+              <FormInput onSubmitEditing={Keyboard.dismiss} placeholder="Post Description" multiline onChangeText={(description) => { this.setState({ description }) }} ref={inputDesc => this.inputDesc = inputDesc} />
               {this.state.description ? <FormValidationMessage /> : <FormValidationMessage>This field is required</FormValidationMessage>}
 
               <FormLabel labelStyle={styles.formLable}>Location</FormLabel>
