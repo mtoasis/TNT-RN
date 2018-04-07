@@ -57,7 +57,7 @@ class PostPage extends React.Component {
     };
   }
 
-  componentDidMount(){
+  componentDidMount() {
     this.setState({ isSent: false })
     console.log(`isSent state is: ${this.state.isSent}`)
     this.props.navigation.setParams({
@@ -168,8 +168,7 @@ class PostPage extends React.Component {
               },
               1000
             );
-
-
+            this.props.navigation.navigate('FindTool')
           })
           .catch(err => console.log(err))
       })
@@ -187,7 +186,7 @@ class PostPage extends React.Component {
 
       return (
         <View style={styles.container}>
-          <KeyboardAvoidingView behavior="padding" style={styles.form}>
+          <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={130}>
             <ScrollView>
               <TouchableHighlight onPress={() => this.setState({ visibleModal: 1 })}>
                 <Image source={image ? { uri: image } : noImage} style={{ width: 400, height: 300 }} />
@@ -203,7 +202,7 @@ class PostPage extends React.Component {
 
               <FormLabel labelStyle={styles.formLable}>Available Date</FormLabel>
               <TouchableOpacity onPress={() => this.setState({ visibleModal: 2 })}>
-                <Text style={styles.text}>{this.state.markedDate ? this.state.markedDate : `Click to set the date`}</Text>
+                <Text style={{marginLeft: 40, fontSize:17, color: "#0080D1"}}>{this.state.markedDate ? this.state.markedDate : `Click to set the date`}</Text>
               </TouchableOpacity>
 
               <FormLabel labelStyle={styles.formLable}>Description</FormLabel>
@@ -214,66 +213,67 @@ class PostPage extends React.Component {
               <Text style={styles.text}>{this.props.geoInfo.city}, {this.props.geoInfo.region}</Text>
 
             </ScrollView>
-
-
-            {/* camera modal */}
-            <Modal isVisible={this.state.visibleModal === 1}>
-              <View style={styles.modalContent}>
-
-                <TouchableOpacity onPress={this.cameraPickImage.bind(this)}>
-                  <View style={styles.modalButton}>
-                    <Text style={styles.modalText}>Take Picture</Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={this.libraryPickImage.bind(this)}>
-                  <View style={styles.modalButton}>
-                    <Text style={styles.modalText}>Open Gallery</Text>
-                  </View>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => this.setState({ visibleModal: null })}>
-                  <View style={styles.modalButton}>
-                    <Text style={styles.modalText}>Close</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </Modal>
-
-            {/* calendar modal */}
-            <Modal isVisible={this.state.visibleModal === 2}>
-              <View style={styles.modalContent}>
-
-                <Calendar
-                  onDayPress={(day) => {
-                    this.saveDate(day.dateString)
-
-                  }}
-                />
-                <Text style={styles.calenderText}>{this.state.markedDate ? this.state.markedDate : "Year-Month-Date"}</Text>
-
-                <TouchableOpacity onPress={() => this.setState({ visibleModal: null })}>
-                  <View style={styles.modalButton}>
-                    <Text style={styles.modalText}>Close</Text>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </Modal>
-
-            <Modal isVisible={this.state.visibleModal === 3}>
-              <View style={styles.modalContent}>
-                <Text style={styles.calenderText}>{this.state.isSent ? `Post Sucess!` : `Sending Post...`}</Text>
-                {this.state.isSent ? <Ionicons name="md-checkmark" size={35} color="black" /> : <Image source={loader} style={{ width: 50, height: 50 }} />}
-              </View>
-            </Modal>
           </KeyboardAvoidingView>
+
+
+          {/* camera modal */}
+          <Modal isVisible={this.state.visibleModal === 1}>
+            <View style={styles.modalContent}>
+
+              <TouchableOpacity onPress={this.cameraPickImage.bind(this)}>
+                <View style={styles.modalButton}>
+                  <Text style={styles.modalText}>Take Picture</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={this.libraryPickImage.bind(this)}>
+                <View style={styles.modalButton}>
+                  <Text style={styles.modalText}>Open Gallery</Text>
+                </View>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={() => this.setState({ visibleModal: null })}>
+                <View style={styles.modalButton}>
+                  <Text style={styles.modalText}>Close</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+
+          {/* calendar modal */}
+          <Modal isVisible={this.state.visibleModal === 2}>
+            <View style={styles.modalContent}>
+
+              <Calendar
+                onDayPress={(day) => {
+                  this.saveDate(day.dateString)
+
+                }}
+              />
+              <Text style={styles.calenderText}>{this.state.markedDate ? this.state.markedDate : "Year-Month-Date"}</Text>
+
+              <TouchableOpacity onPress={() => this.setState({ visibleModal: null })}>
+                <View style={styles.modalButton}>
+                  <Text style={styles.modalText}>Close</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+          </Modal>
+
+          <Modal isVisible={this.state.visibleModal === 3}>
+            <View style={styles.modalContent}>
+              <Text style={styles.calenderText}>{this.state.isSent ? `Post Sucess!` : `Sending Post...`}</Text>
+              {this.state.isSent ? <Ionicons name="md-checkmark" size={35} color="black" /> : <Image source={loader} style={{ width: 50, height: 50 }} />}
+            </View>
+          </Modal>
+
         </View>
       )
     }
 
     return (
       <View style={styles.containerBlack}>
-        <Text style={{ fontSize: 20, color: "white", marginBottom:40  }}>
+        <Text style={{ fontSize: 20, color: "white", marginBottom: 40 }}>
           Please sign in to post
     </Text>
         {/* <GoogleAuth /> */}
@@ -329,10 +329,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: 20,
     color: "#0080D1"
-  },
-  form: {
-    flex: 1,
-    justifyContent: 'space-between',
   },
   formLable: {
     fontSize: 17

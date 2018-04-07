@@ -27,14 +27,13 @@ export default class MessagePage extends React.Component {
             message: null,
             isMessageMount: false,
             newMessage: null,
-            lastMessage: null,
         }
     }
 
     componentDidMount() {
         this.timerID = setInterval(
             () => this.getMessage(),
-            2000
+            1000
         );
     }
     componentWillUnmount() {
@@ -43,15 +42,19 @@ export default class MessagePage extends React.Component {
 
 
     getMessage = () => {
-        console.log("refreshing")
+
         axios.post("http://toolntool.herokuapp.com/api/mobile/messages", {
             cid: this.props.navigation.state.params.conversation._id
         }).then(response => {
-            this.setState({
-                message: response.data,
-                isMessageMount: true,
-            })
 
+            if (this.state.message === null || response.data.messages.length !== this.state.message.messages.length) {
+                console.log("updating message")
+                this.setState({
+                    message: response.data,
+                    isMessageMount: true,
+                })
+            }
+            // this.scrollView.scrollToEnd({ animated: true })
         })
     }
 
@@ -62,11 +65,8 @@ export default class MessagePage extends React.Component {
             uid: this.props.navigation.state.params.userInfo._id,
             content: this.state.newMessage
         }).then(response => {
-            console.log("message response from server \n")
-            console.log(response.data)
             this.input.clearText()
-            this.scrollView.scrollToEnd({ animated: true })
-
+            // this.scrollView.scrollToEnd({ animated: true })
         })
     }
 
@@ -83,10 +83,14 @@ export default class MessagePage extends React.Component {
         const msg = this.state.message.messages
         const params = this.props.navigation.state.params
         return (
-            // <View style={styles.container}>
-            <KeyboardAvoidingView behavior="padding" style={styles.container}>
+            <View style={styles.container}>
+                <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={100}>
+                    <ScrollView style={{ height: "85%" }}
+                        ref={(scrollView) => { this.scrollView = scrollView }}
+                        onContentSizeChange={(contentWidth, contentHeight) => {
+                            this.scrollView.scrollToEnd({ animated: true });
+                        }}>
 
-                    <ScrollView style={{ height: "80%", width: "100%", borderColor: "white" }} ref={(scrollView) => { this.scrollView = scrollView }}>
                         {
                             msg.slice(0).reverse().map((message, key) => {
 
@@ -99,8 +103,8 @@ export default class MessagePage extends React.Component {
                                             styles.nameRight : styles.nameLeft}>
 
                                             {message.sender._id === params.userInfo._id ?
-                                                       `${params.userInfo.name.givenName} ${params.userInfo.name.familyName}`
-                                                       : `${message.sender.name.givenName} ${message.sender.name.familyName}`}
+                                                `${params.userInfo.name.givenName} ${params.userInfo.name.familyName}`
+                                                : `${message.sender.name.givenName} ${message.sender.name.familyName}`}
                                         </Text>
 
                                         <Text style={message.sender._id === params.userInfo._id ?
@@ -120,15 +124,13 @@ export default class MessagePage extends React.Component {
                             })
                         }
                     </ScrollView >
-
-                    <View style={{ flexDirection: 'row', }}>
-
+                    <View style={{ flexDirection: 'row', marginTop: 20 }}>
                         <FormInput
                             containerStyle={{
                                 width: 250,
                                 height: 50,
                                 backgroundColor: "white",
-                                marginLeft: 10
+                                marginLeft: 15
                             }}
                             inputStyle={{ fontSize: 20 }}
                             onChangeText={(newMessage) => { this.setState({ newMessage }) }}
@@ -137,23 +139,24 @@ export default class MessagePage extends React.Component {
                             placeholder="Type message"
                         />
 
-                        <Button buttonStyle={{ width: 80, height: 50, borderWidth: 1, borderColor: "grey", marginRight: 10 }}
-                            backgroundColor="#D2D2D2"
-                            icon={{ name: 'send', size: 30, }}
+                        <Button buttonStyle={{ width: 80, height: 50, marginRight: 15 }}
+                            backgroundColor="transparent"
+                            icon={{ name: 'send', size: 30, color: "black" }}
                             onPress={this.sendMessage.bind(this)} />
 
                     </View>
                 </KeyboardAvoidingView>
-
-            // </View>
+            </View>
         )
     }
 }
 
+
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white"
+        flexDirection: 'column',
+        backgroundColor: 'white'
     },
     msgLeft: {
         backgroundColor: "#DBDBDB",
