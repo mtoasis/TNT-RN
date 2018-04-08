@@ -54,20 +54,28 @@ export default class MessagePage extends React.Component {
                     isMessageMount: true,
                 })
             }
-            // this.scrollView.scrollToEnd({ animated: true })
         })
     }
 
     sendMessage() {
+        console.log(this.state.newMessage)
+        if (this.state.newMessage !== null){
+        let sendingMessage = this.state.newMessage;
+        this.input.clearText()
+        this.setState({newMessage: null})
         console.log("sending new msg")
         axios.post("http://toolntool.herokuapp.com/api/mobile/sendmessage", {
             cid: this.props.navigation.state.params.conversation._id,
             uid: this.props.navigation.state.params.userInfo._id,
-            content: this.state.newMessage
-        }).then(response => {
-            this.input.clearText()
-            // this.scrollView.scrollToEnd({ animated: true })
+            content: sendingMessage
+        }).then(response =>{             
+            console.log(`message sent with ${sendingMessage}`)
+
         })
+    }
+    else{
+        console.log("no message present")
+    }
     }
 
     render() {
