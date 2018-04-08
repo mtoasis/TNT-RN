@@ -1,5 +1,25 @@
 {
   "expo": {
-    "sdkVersion": "25.0.0"
+    "sdkVersion": "25.0.0",
+    "android": {
+      "package": "com.MRJCO.TNTmobile",
+      "versionCode": 1,
+      "versionName": "1.0.0",
+      "permissions":[
+        "ACCESS_FINE_LOCATION",
+        "CAMERA",
+        "READ_INTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE",
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION"
+      ]
+    },
+    "version": "1.0.0",
+    "description":"The ultimate marketplace for sharing home improvement tools",
+    "icon": "./src/resource/Img/tntico.png",
+    "slug": "expo.io/@mtoasis22/tntmobile"
   }
 }
+
+
