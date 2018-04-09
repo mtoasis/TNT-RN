@@ -21,9 +21,9 @@ export default class GoogleAuth extends Component {
     this.setState({ isButtonPressed: true })
     try {
       const { type, user } = await Google.logInAsync({
-        androidStandaloneAppClientId: '<ANDROID_CLIENT_ID>',
+        androidStandaloneAppClientId: '360376856742-5t2b376blpap03u21q4vogadgd7675f1.apps.googleusercontent.com',
         iosStandaloneAppClientId: '<IOS_CLIENT_ID>',
-        androidClientId: '603386649315-9rbv8vmv2vvftetfbvlrbufcps1fajqf.apps.googleusercontent.com',
+        androidClientId: '360376856742-5t2b376blpap03u21q4vogadgd7675f1.apps.googleusercontent.com',
         iosClientId: '603386649315-vp4revvrcgrcjme51ebuhbkbspl048l9.apps.googleusercontent.com',
         scopes: ['profile', 'email']
       });

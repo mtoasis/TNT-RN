@@ -3,8 +3,6 @@
     "sdkVersion": "25.0.0",
     "android": {
       "package": "com.MRJCO.TNTmobile",
-      "versionCode": 1,
-      "versionName": "1.0.0",
       "permissions":[
         "ACCESS_FINE_LOCATION",
         "CAMERA",
@@ -13,12 +11,19 @@
         "WRITE_EXTERNAL_STORAGE",
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION"
-      ]
+      ],
+      "config":{
+        "googleSignIn":{
+          "apiKey":"AIzaSyCwNfGB5K0xImaPgs7GntfSc3T__Ju5Kr4",
+          "certificateHash":"FA18415C39DC04EF5E754B98C983AB6BD248FAAC"
+        },
+        "googleMaps":"AIzaSyCwNfGB5K0xImaPgs7GntfSc3T__Ju5Kr4"
+      }
     },
     "version": "1.0.0",
     "description":"The ultimate marketplace for sharing home improvement tools",
     "icon": "./src/resource/Img/tntico.png",
-    "slug": "expo.io/@mtoasis22/tntmobile"
+    "slug": "TNTmobile"
   }
 }
 
