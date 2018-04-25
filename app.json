@@ -1,6 +1,14 @@
 {
   "expo": {
     "sdkVersion": "25.0.0",
+    "ios": {
+      "bundleIdentifier": "com.nchen.ToolNTool",
+      "config":{
+        "googleSignIn": {
+          "reservedClientId": "360376856742-jd1jorti1pjjeges8sl5ogae71d0md63.apps.googleusercontent.com "
+        }
+      }
+    },
     "android": {
       "package": "com.MRJCO.TNTmobile",
       "permissions": [

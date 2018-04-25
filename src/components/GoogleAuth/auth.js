@@ -22,9 +22,9 @@ export default class GoogleAuth extends Component {
     try {
       const { type, user } = await Google.logInAsync({
         androidStandaloneAppClientId: '360376856742-5t2b376blpap03u21q4vogadgd7675f1.apps.googleusercontent.com',
-        iosStandaloneAppClientId: '<IOS_CLIENT_ID>',
+        iosStandaloneAppClientId: '360376856742-jd1jorti1pjjeges8sl5ogae71d0md63.apps.googleusercontent.com',
         androidClientId: '360376856742-5t2b376blpap03u21q4vogadgd7675f1.apps.googleusercontent.com',
-        iosClientId: '603386649315-vp4revvrcgrcjme51ebuhbkbspl048l9.apps.googleusercontent.com',
+        iosClientId: '360376856742-jd1jorti1pjjeges8sl5ogae71d0md63.apps.googleusercontent.com',
         scopes: ['profile', 'email']
       });
 
